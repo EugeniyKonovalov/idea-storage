@@ -1,10 +1,12 @@
 import { bindActionCreators } from "@reduxjs/toolkit";
 import { useMemo } from "react";
-import authSlice, { actions } from "store/auth/auth.slice";
+import { authActions } from "store/auth/auth.slice";
+import { foldersAction } from "store/folder/folders.slice";
 import { useAppDispatch } from "./useRedux";
 
 const rootAction = {
-  ...actions,
+  ...authActions,
+  ...foldersAction,
 };
 
 export const useActions = () => {

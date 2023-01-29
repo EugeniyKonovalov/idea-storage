@@ -1,4 +1,5 @@
 import {
+  Button,
   chakra,
   Flex,
   FormControl,
@@ -80,21 +81,25 @@ const AuthForm: React.FC = () => {
           src={!isSignUp ? SignInImg.src : SignUpImg.src}
           alt={"people conect"}
         />
-        <Text {...inter_400_18_25} textAlign={"center"}>
-          {isSignUp ? "You have an account? " : "Don't have an acount? "}
-          <Span
+        <Flex alignItems={"center"} columnGap={"8px"}>
+          <Text {...inter_400_18_25} textAlign={"center"}>
+            {isSignUp ? "You have an account? " : "Don't have an acount? "}
+          </Text>
+          <Button
+            variant={"unstyled"}
             {...inter_600_18_25}
             color={"#FFBE55"}
             textDecoration={"underline"}
             cursor={"pointer"}
-            _hover={{ tracsform: "scaleY(10px)" }}
+            _hover={{ transform: "translate(0, -2px)" }}
+            transition={"all 0.3s"}
             onClick={() => {
               !isSignUp ? signUpHandler() : signInHandler();
             }}
           >
             {!isSignUp ? "Sign Up!" : "Sign In!"}
-          </Span>
-        </Text>
+          </Button>
+        </Flex>
       </Flex>
     </Flex>
   );

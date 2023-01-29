@@ -1,4 +1,3 @@
-import { Text } from "@chakra-ui/react";
 import Home from "components/home/home";
 import Layout from "components/layout/layout";
 

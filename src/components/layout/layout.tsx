@@ -11,6 +11,7 @@ const Layout: React.FC<AppChildrensType> = ({ children }) => {
     <Flex flexDir={"column"} m={"0 auto"} maxWidth={"1440px"}>
       <Header />
       <Flex
+        id={"layout"}
         pos={"relative"}
         flexDir={"column"}
         mt={"70px"}

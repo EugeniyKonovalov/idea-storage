@@ -8,6 +8,8 @@ const DefaultBtn: React.FC<AppChildrensType & BtnType> = ({
   customStyles,
   onClick,
   disabled,
+  onMouseEnter,
+  onMouseLeave,
 }) => {
   return (
     <Button
@@ -19,11 +21,13 @@ const DefaultBtn: React.FC<AppChildrensType & BtnType> = ({
       borderRadius={"0px"}
       px={"48px"}
       h={"40px"}
-      {...customStyles}
-      onClick={onClick}
-      disabled={disabled}
       _hover={{ bg: "#ced4da", color: "#89B0AE" }}
       _disabled={{ color: "#C4C4C4", bg: "#E7E7E7" }}
+      {...customStyles}
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      disabled={disabled}
     >
       {children ? children : title}
     </Button>

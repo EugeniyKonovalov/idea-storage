@@ -15,12 +15,12 @@ const CustomModal = ({ children, isOpen, onClose }: ModalProps) => {
       <ModalContent
         mb={"20px"}
         pos={"relative"}
-        maxW={{ base: "370px", md: "680px", xl: "fit-content" }}
-        bg={"#fff"}
-        borderRadius={"20px"}
+        bg={"#62677f"}
+        border={"none"}
+        borderRadius={"0px"}
         mx={{ base: "10px" }}
       >
-        <ModalCloseButton color={"#9FA8C4"} mt={"10px"} mr={"10px"} />
+        <ModalCloseButton color={"#629390"} />
 
         <ModalBody p={"0"}>{children}</ModalBody>
       </ModalContent>

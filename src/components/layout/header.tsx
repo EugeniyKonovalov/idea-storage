@@ -1,14 +1,13 @@
 import { Flex, Heading, Image } from "@chakra-ui/react";
-import LogoImg from "assets/notes-icon.png";
+import LogoImg from "assets/image/notes-icon.png";
 import DefaultBtn from "components/ui/defaultBtn";
 import SearchInput from "components/ui/searchInput";
 import useAppRouter from "hooks/useAppRouter";
-import { NextRouter, useRouter } from "next/router";
-import { useState } from "react";
+import React from "react";
 
 import { inter_700_32_48 } from "../../../styles/fontStyles";
 
-const Header = () => {
+const Header: React.FC = () => {
   const { router } = useAppRouter();
 
   const openLoginHandler = () => {
@@ -29,6 +28,7 @@ const Header = () => {
         h={"70px"}
         bg={"linear-gradient(to right,#89b0ae  , #555B6E )"}
         borderBottom={"1px solid #faf9f9"}
+        zIndex={100}
       >
         <Flex
           w={"100%"}

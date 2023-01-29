@@ -8,11 +8,11 @@ const Home = () => {
   const { router } = useAppRouter();
 
   const getStartHandle = () => {
-    router.push("/login");
+    router.push("/sign_up");
   };
 
   return (
-    <Grid templateColumns={"1.5fr 1fr"} alignContent={"center"}>
+    <Grid templateColumns={"1.2fr 1fr"} alignContent={"center"}>
       <Flex>
         <Image src={HomeImg.src} w={"100%"} alt="landing image" />
       </Flex>
@@ -23,10 +23,12 @@ const Home = () => {
         rowGap={"24px"}
       >
         <Text>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut eos
-          blanditiis adipisci odit sunt temporibus, ducimus quaerat hic eligendi
-          laboriosam! Ut esse recusandae sint culpa quidem, nostrum soluta nam
-          fuga.
+          Here you can add your idea and notes about anything or anyone.
+        </Text>
+        <Text> Just add to folders and nest them inside each other.</Text>
+        <Text>
+          And you will always be able to find them organized and easily
+          accessible!
         </Text>
         <DefaultBtn
           title="Get Start"

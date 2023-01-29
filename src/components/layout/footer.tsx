@@ -9,6 +9,7 @@ const Footer = () => {
       justifyContent={"center"}
       h={"70px"}
       marginTop={"auto"}
+      zIndex={100}
     >
       <Text textAlign={"center"} fontSize={"18px"}>
         &copy; {currentYear}

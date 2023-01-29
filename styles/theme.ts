@@ -3,7 +3,9 @@ import { mode } from "@chakra-ui/theme-tools";
 import { Dict } from "@chakra-ui/utils";
 
 const theme = extendTheme({
-  fonts: { body: "Inter" },
+  fonts: {
+    body: "Inter, sans-serif",
+  },
 
   styles: {
     global: (props: Dict<any>) => ({
