@@ -1,19 +1,22 @@
+import { folderType } from "./folders_types";
+
 export type InputsObjType = {
   id?: string;
   type?: string;
   value?: string | number;
   placeholder?: string;
-  maxlength?: string;
 };
 
 export interface InputsType {
   label?: string;
   input?: InputsObjType;
   customStyles?: any;
+  maxLength?: number;
   onChange?: (event: any) => void;
   onFocus?: () => void;
   onClick?: () => void;
   onBlur?: () => void;
+  onSubmit?: (e: React.FormEvent) => void;
 }
 
 export interface BtnType {
@@ -30,8 +33,11 @@ export interface ModalType {
   onClose: () => void;
 }
 export interface addFolderModalType {
-  item?: any;
+  item: folderType;
   showSubfolderHandler: () => void;
+}
+export interface addNoteModalType {
+  folder_id: number;
 }
 
 export interface validationTextType {

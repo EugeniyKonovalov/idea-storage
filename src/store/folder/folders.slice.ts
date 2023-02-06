@@ -3,7 +3,7 @@ import { foldersType, folderType } from "types/folders_types";
 
 const initialState: foldersType = {
   is_exist_folder_name: false,
-  folders: [{ id: 1, name: "root" }],
+  folders: [],
   is_selected_folder: null,
   is_add_subfolder: false,
   is_show_add_root_folder: false,
@@ -16,6 +16,10 @@ const foldersSlice = createSlice({
     isExistName: (state, action: PayloadAction<boolean>) => {
       state.is_exist_folder_name = action.payload;
     },
+    setFolders: (state, action: PayloadAction<folderType[]>) => {
+      state.folders = action.payload;
+    },
+
     addNewFolder: (state, action: PayloadAction<folderType>) => {
       state.folders.push(action.payload);
     },

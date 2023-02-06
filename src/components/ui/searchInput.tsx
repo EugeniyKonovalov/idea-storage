@@ -3,15 +3,17 @@ import * as React from "react";
 import { Flex, FormControl, Image, Input } from "@chakra-ui/react";
 import { InputsType } from "types/ui_types";
 import SearchIcon from "assets/image/search-icon.png";
-const SearchInput: React.FC<InputsType> = ({ input, onChange }) => {
+const SearchInput: React.FC<InputsType> = ({ input, onChange, onSubmit }) => {
   return (
     <FormControl
       as={"form"}
       display={"flex"}
       border={"1px solid #ced4da"}
+      borderRadius={"5px"}
       h={"40px"}
       ps={"8px"}
       columnGap={"8px"}
+      onSubmit={onSubmit}
     >
       <Flex alignItems={"center"} justifyContent={"center"}>
         <Image src={SearchIcon.src} w={"32px"} alt="Search icon" />

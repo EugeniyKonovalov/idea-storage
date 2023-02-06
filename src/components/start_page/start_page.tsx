@@ -12,7 +12,7 @@ const StartPage: React.FC = () => {
         rowGap={"24px"}
         w={"100%"}
       >
-        <Text {...inter_400_18_25}>
+        <Text {...inter_400_18_25} px={"24px"}>
           Create your first folder to get started
         </Text>
         <AddRootFolder />

@@ -40,18 +40,23 @@ export const inter_400_24_33 = {
   lineHeight: "33px",
 };
 
-//inter_700
-
-export const inter_700_32_48 = {
-  fontWeight: "600",
-  fontSize: "36px",
-  lineHeight: "52px",
-};
-
 // inter_600
 
 export const inter_600_18_25 = {
   fontWeight: "600",
   fontSize: "18px",
   lineHeight: "25px",
+};
+
+export const inter_600_24_32 = {
+  fontWeight: "600",
+  fontSize: "24px",
+  lineHeight: "32px",
+};
+//inter_700
+
+export const inter_700_32_48 = {
+  fontWeight: "600",
+  fontSize: "36px",
+  lineHeight: "52px",
 };

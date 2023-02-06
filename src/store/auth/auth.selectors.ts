@@ -1,4 +1,6 @@
 import { useAppSelector } from "hooks/useRedux";
-const getIsSignUp = () => useAppSelector((state) => state.auth.is_sign_up);
+const getIsLoggedIn = () => useAppSelector((state) => state.auth.isLoggedIn);
+const getIsShowPassword = () =>
+  useAppSelector((state) => state.auth.is_show_password);
 
-export { getIsSignUp };
+export { getIsLoggedIn, getIsShowPassword };

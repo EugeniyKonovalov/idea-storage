@@ -14,21 +14,42 @@ import React from "react";
 import SignInImg from "assets/image/graduation.png";
 import SignUpImg from "assets/image/book.png";
 import { inter_400_18_25, inter_600_18_25 } from "../../../styles/fontStyles";
-import { getIsSignUp } from "store/auth/auth.selectors";
+import useInput from "hooks/useInput";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../../firebase.config";
+import { userType } from "types/auth_types";
+import { getIsShowPassword } from "store/auth/auth.selectors";
 import { useActions } from "hooks/useActions";
 
 const Span = chakra("span", {});
 
 const AuthForm: React.FC = () => {
   const { router } = useAppRouter();
-  const { signUpToogle } = useActions();
+  const { signUp } = useActions();
   const isSignUp = router.pathname === "/sign_up";
+  const isShowPassword = getIsShowPassword();
+  const [user] = useAuthState(auth);
+  const { data: authData, changeHandler: authChangeHandler } = useInput();
 
-  const signInHandler = () => {
+  const signInTabHandler = () => {
     router.push("/sign_in");
   };
-  const signUpHandler = () => {
+  const signUpTabHandler = () => {
     router.push("/sign_up");
+  };
+
+  const submitHandler = async () => {
+    const signUpOptions: userType = {
+      name: `${authData?.first_name} ${authData?.last_name}`,
+      email: authData?.email,
+      password: authData?.password,
+    };
+    const signInOptions: userType = {
+      email: authData?.email,
+      password: authData?.password,
+    };
+
+    signUp(isSignUp ? signUpOptions : signInOptions);
   };
 
   return (
@@ -53,13 +74,54 @@ const AuthForm: React.FC = () => {
           pt={"12px"}
           rowGap={"8px"}
         >
-          {isSignUp && <CustomInput label="First Name" />}
-          {isSignUp && <CustomInput label="Last Name" />}
-          <CustomInput label="Email" />
-          <CustomInput label="Password" />
+          {isSignUp && (
+            <CustomInput
+              label="First Name"
+              input={{
+                id: "first_name",
+                type: "text",
+                value: authData?.first_name || "",
+                placeholder: "Enter first name",
+              }}
+              onChange={authChangeHandler}
+            />
+          )}
+          {isSignUp && (
+            <CustomInput
+              label="Last Name"
+              input={{
+                id: "last_name",
+                type: "text",
+                value: authData?.last_name || "",
+                placeholder: "Enter last name",
+              }}
+              onChange={authChangeHandler}
+            />
+          )}
+          <CustomInput
+            label="Email"
+            input={{
+              id: "email",
+              type: "text",
+              value: authData?.email || "",
+              placeholder: "Enter email",
+            }}
+            onChange={authChangeHandler}
+          />
+          <CustomInput
+            label="Password"
+            input={{
+              id: "password",
+              type: !isShowPassword ? "password" : "text",
+              value: authData?.password || "",
+              placeholder: "Enter password",
+            }}
+            onChange={authChangeHandler}
+          />
           <DefaultBtn
             title={isSignUp ? "Sign Up" : "Sign In"}
             customStyles={{ bg: !isSignUp ? "#89b0ae" : "#505568", mt: "28px" }}
+            onClick={submitHandler}
           />
         </FormControl>
       </Flex>
@@ -94,7 +156,7 @@ const AuthForm: React.FC = () => {
             _hover={{ transform: "translate(0, -2px)" }}
             transition={"all 0.3s"}
             onClick={() => {
-              !isSignUp ? signUpHandler() : signInHandler();
+              !isSignUp ? signUpTabHandler() : signInTabHandler();
             }}
           >
             {!isSignUp ? "Sign Up!" : "Sign In!"}

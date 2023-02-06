@@ -1,18 +1,20 @@
-import { Flex, Image, Text, UnorderedList } from "@chakra-ui/react";
-import DefaultBtn from "components/ui/defaultBtn";
+import { chakra, Flex, Image, Text, UnorderedList } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { getFolders, getIsAddRootFolder } from "store/folder/folder.selectors";
 import AddFolderIconWhite from "assets/image/add-folder-white.png";
-import AddFolderIconGreen from "assets/image/add-folder.png";
 import SubFolder from "./sub_folder";
 import AddRootFolder from "./add_root_folder";
 import { useActions } from "hooks/useActions";
+import { inter_400_12_16 } from "../../../styles/fontStyles";
+
+const Span = chakra("span", {});
 
 const FoldersList = () => {
   const [hoverAddBtn, setHoverAddBtn] = useState<boolean>(false);
   const { setIsShowAddRootFolder } = useActions();
   const isShowAddRootFolder = getIsAddRootFolder();
   const folders = getFolders();
+  console.log(folders);
 
   const childrenFolder = (id: number | string) => {
     let childItems = folders?.filter((item) => item.parent_id === id);
@@ -42,23 +44,22 @@ const FoldersList = () => {
       <Flex flexDir={"column"}>
         {isShowAddRootFolder && <AddRootFolder />}
         {!isShowAddRootFolder && (
-          <DefaultBtn
-            onMouseEnter={() => setHoverAddBtn(true)}
-            onMouseLeave={() => setHoverAddBtn(false)}
-            customStyles={{ w: "fit-content", px: "12px" }}
-            onClick={() => setIsShowAddRootFolder(true)}
-          >
-            <Flex alignItems={"center"} columnGap={"8px"}>
-              <Image
-                src={
-                  (!hoverAddBtn ? AddFolderIconWhite : AddFolderIconGreen).src
-                }
-                w={"32px"}
-                alt={"Add folder icon"}
-              />
-              <Text>Add folder to root</Text>
-            </Flex>
-          </DefaultBtn>
+          <Flex alignItems={"end"} columnGap={"6px"}>
+            <Image
+              onMouseEnter={() => setHoverAddBtn(true)}
+              onMouseLeave={() => setHoverAddBtn(false)}
+              src={AddFolderIconWhite.src}
+              w={"54px"}
+              alt={"Add folder icon"}
+              cursor={"pointer"}
+              onClick={() => setIsShowAddRootFolder(true)}
+            />
+            {hoverAddBtn && (
+              <Text {...inter_400_12_16} mb={"6px"}>
+                <Span color={"#FFBE55"}>*</Span>Add folder to root
+              </Text>
+            )}
+          </Flex>
         )}
       </Flex>
     </>

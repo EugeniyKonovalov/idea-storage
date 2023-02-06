@@ -1,4 +1,4 @@
-import { Flex, Image } from "@chakra-ui/react";
+import { Flex, Image, Text } from "@chakra-ui/react";
 import CustomInput from "components/ui/customInput";
 import CustomModal from "components/ui/customModal";
 import DefaultBtn from "components/ui/defaultBtn";
@@ -6,9 +6,13 @@ import { useActions } from "hooks/useActions";
 import useGenerateId from "hooks/useGenerateId";
 import useInput from "hooks/useInput";
 import React, { useEffect } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useAddFolderMutation } from "store/api_queries/api_idea_storage";
 import { getFolders, getIsExistName } from "store/folder/folder.selectors";
 import { folderType } from "types/folders_types";
 import { addFolderModalType, ModalType } from "types/ui_types";
+import { auth } from "../../../firebase.config";
+import { inter_400_18_25, inter_600_18_25 } from "../../../styles/fontStyles";
 import FolderValidationText from "./folder_validation_text";
 
 const AddFolderForm: React.FC<ModalType & addFolderModalType> = ({
@@ -19,13 +23,15 @@ const AddFolderForm: React.FC<ModalType & addFolderModalType> = ({
 }) => {
   const { isExistName, addNewFolder } = useActions();
   const isExist = getIsExistName();
+  const [user] = useAuthState(auth);
+  const [addFolder] = useAddFolderMutation();
   const folders = getFolders();
   const newFolderId = useGenerateId(folders);
   const {
     data: subfolder,
     setData: setSubfolder,
-    changeHandler: subfolderChangehandler,
-    blurHandler: subfolderBlurhandler,
+    changeHandler: subfolderChangeHandler,
+    blurHandler: subfolderBlurHandler,
     isTouched: subfolderIsTouched,
     leaveFocusHandler: subfolderLeaveFocusHandler,
   } = useInput();
@@ -38,11 +44,18 @@ const AddFolderForm: React.FC<ModalType & addFolderModalType> = ({
     }
     isExistName(false);
     subfolder?.name &&
-      addNewFolder({
+      addFolder({
+        user_id: user?.uid,
         id: newFolderId,
         parent_id: item?.id,
         name: subfolder?.name,
       });
+    // addNewFolder({
+    //   user_id: 1,
+    //   id: newFolderId,
+    //   parent_id: item?.id,
+    //   name: subfolder?.name,
+    // });
     setSubfolder("");
     subfolderLeaveFocusHandler();
     showSubfolderHandler();
@@ -59,10 +72,13 @@ const AddFolderForm: React.FC<ModalType & addFolderModalType> = ({
 
   return (
     <CustomModal isOpen={isOpen} onClose={onClose}>
+      <Text {...inter_400_18_25} color={"#89b0ae"} mt={"12px"} ml={"24px"}>
+        Add subfolder
+      </Text>
       <Flex
         flexDir={"column"}
         px={"24px"}
-        pt={"64px"}
+        pt={"24px"}
         pb={"24px"}
         rowGap={"48px"}
       >
@@ -77,13 +93,13 @@ const AddFolderForm: React.FC<ModalType & addFolderModalType> = ({
             input={{
               id: "name",
               type: "text",
-              maxlength: "20",
               value: subfolder?.name || "",
               placeholder: "Enter folder name",
             }}
+            maxLength={20}
             customStyles={{ h: "40px" }}
-            onChange={subfolderChangehandler}
-            onBlur={subfolderBlurhandler}
+            onChange={subfolderChangeHandler}
+            onBlur={subfolderBlurHandler}
           />
 
           <FolderValidationText
@@ -94,7 +110,7 @@ const AddFolderForm: React.FC<ModalType & addFolderModalType> = ({
           />
         </Flex>
         <DefaultBtn
-          title="Add folder"
+          title="Add"
           customStyles={{ w: "35%", alignSelf: "flex-end" }}
           onClick={(e) => addSubfolderhandler(e, item)}
         />

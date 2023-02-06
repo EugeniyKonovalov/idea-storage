@@ -1,12 +1,10 @@
-import { Flex, FormLabel, Input } from "@chakra-ui/react";
-import { kMaxLength } from "buffer";
+import { Flex, FormLabel, Textarea } from "@chakra-ui/react";
 import React from "react";
 import { InputsType } from "types/ui_types";
 
-const CustomInput: React.FC<InputsType> = ({
+const CustomTextarea: React.FC<InputsType> = ({
   label,
   input,
-  maxLength,
   customStyles,
   onChange,
   onBlur,
@@ -14,20 +12,21 @@ const CustomInput: React.FC<InputsType> = ({
   return (
     <Flex flexDir={"column"} w={"100%"}>
       {label && <FormLabel>{label}</FormLabel>}
-      <Flex
-        borderRadius={"5px"}
-        border={"1px solid #ced4da"}
-        h={"40px"}
-        ps={"16px"}
-        {...customStyles}
-      >
-        <Input
+      <Flex>
+        <Textarea
+          borderRadius={"5px"}
+          border={"1px solid #ced4da"}
+          minH={"150px"}
+          maxH={"240px"}
+          px={"16px"}
           autoComplete="off"
           variant={"unstyled"}
+          rows={14}
+          // resize={"none"}
           _placeholder={{ color: "#ece9e955" }}
           _focus={{ boxShadow: "none" }}
+          {...customStyles}
           {...input}
-          maxLength={maxLength}
           onChange={onChange}
           onBlur={onBlur}
         />
@@ -36,4 +35,4 @@ const CustomInput: React.FC<InputsType> = ({
   );
 };
 
-export default CustomInput;
+export default CustomTextarea;

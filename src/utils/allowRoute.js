@@ -1,1 +1,1 @@
-const allowRoute = ["sign_in", "sign_up"];
+export const allowRoute = ["/", "/sign_in", "/sign_up"];

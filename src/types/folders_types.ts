@@ -1,5 +1,5 @@
 export interface folderType {
-  id: number | string;
+  id: number;
   parent_id?: number | string;
   user_id?: number | string;
   name: string;

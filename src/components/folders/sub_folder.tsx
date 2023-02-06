@@ -10,6 +10,8 @@ import AddDocumentIcon from "assets/image/add-document-1-white.png";
 import EditFolderIcon from "assets/image/edit.png";
 import DeleteFolderIcon from "assets/image/delete.png";
 import AddFolderForm from "./add_folder_form";
+import AddNoteForm from "components/notes/add_note_form";
+import useGetNotes from "hooks/useGetNotes";
 
 const SubFolder: React.FC<AppChildrensType & subFoldersType> = ({
   item,
@@ -17,8 +19,13 @@ const SubFolder: React.FC<AppChildrensType & subFoldersType> = ({
 }) => {
   const {
     isOpen: isAddNewFolder,
-    onClose: isCloseAddNewFolder,
     onOpen: isOpenAddNewFolder,
+    onClose: isCloseAddNewFolder,
+  } = useDisclosure();
+  const {
+    isOpen: isAddNewNote,
+    onOpen: isOpenAddNewNote,
+    onClose: isCloseAddNewNote,
   } = useDisclosure();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [hoverFolder, setHoverFolder] = useState<boolean>(false);
@@ -29,7 +36,9 @@ const SubFolder: React.FC<AppChildrensType & subFoldersType> = ({
   const showSubfolderHandler = () => {
     setIsOpen(true);
   };
-  showSubfolderHandler;
+
+  const notes = useGetNotes(item?.id);
+  console.log(notes);
   return (
     <ListItem>
       {isAddNewFolder && (
@@ -38,6 +47,13 @@ const SubFolder: React.FC<AppChildrensType & subFoldersType> = ({
           onClose={isCloseAddNewFolder}
           item={item}
           showSubfolderHandler={showSubfolderHandler}
+        />
+      )}
+      {isAddNewNote && (
+        <AddNoteForm
+          isOpen={isAddNewNote}
+          onClose={isCloseAddNewNote}
+          folder_id={item?.id}
         />
       )}
       <Flex
@@ -73,6 +89,7 @@ const SubFolder: React.FC<AppChildrensType & subFoldersType> = ({
               alt={"document icon"}
               cursor={"pointer"}
               title={"Add document"}
+              onClick={isOpenAddNewNote}
             />
             <Image
               src={EditFolderIcon.src}
@@ -91,6 +108,13 @@ const SubFolder: React.FC<AppChildrensType & subFoldersType> = ({
           </Flex>
         )}
       </Flex>
+      {isOpen && (
+        <>
+          {notes?.map((item) => (
+            <Text key={item.id}>{item?.title}</Text>
+          ))}
+        </>
+      )}
       {isOpen && <>{children}</>}
     </ListItem>
   );
