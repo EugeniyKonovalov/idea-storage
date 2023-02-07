@@ -7,5 +7,5 @@ export interface noteType {
 }
 
 export interface notesType {
-  notes: noteType[];
+  current_note: noteType | null;
 }

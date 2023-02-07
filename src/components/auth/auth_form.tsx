@@ -25,7 +25,7 @@ const Span = chakra("span", {});
 
 const AuthForm: React.FC = () => {
   const { router } = useAppRouter();
-  const { signUp } = useActions();
+  const { signUp, signIn } = useActions();
   const isSignUp = router.pathname === "/sign_up";
   const isShowPassword = getIsShowPassword();
   const [user] = useAuthState(auth);
@@ -49,7 +49,7 @@ const AuthForm: React.FC = () => {
       password: authData?.password,
     };
 
-    signUp(isSignUp ? signUpOptions : signInOptions);
+    isSignUp ? signUp(signUpOptions) : signIn(signInOptions);
   };
 
   return (

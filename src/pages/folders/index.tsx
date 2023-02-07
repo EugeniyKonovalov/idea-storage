@@ -17,10 +17,9 @@ const Index: NextPage = () => {
 
   return (
     <Layout>
-      <Grid templateColumns={"1fr 2fr"}>
-        <Folders />
+      <Folders>
         <Notes />
-      </Grid>
+      </Folders>
     </Layout>
   );
 };

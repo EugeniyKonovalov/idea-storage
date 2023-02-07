@@ -10,12 +10,12 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useAddFolderMutation } from "store/api_queries/api_idea_storage";
 import { getFolders, getIsExistName } from "store/folder/folder.selectors";
 import { folderType } from "types/folders_types";
-import { addFolderModalType, ModalType } from "types/ui_types";
+import { addModalType, ModalType } from "types/ui_types";
 import { auth } from "../../../firebase.config";
 import { inter_400_18_25, inter_600_18_25 } from "../../../styles/fontStyles";
 import FolderValidationText from "./folder_validation_text";
 
-const AddFolderForm: React.FC<ModalType & addFolderModalType> = ({
+const AddFolderForm: React.FC<ModalType & addModalType> = ({
   isOpen,
   onClose,
   item,
@@ -50,12 +50,12 @@ const AddFolderForm: React.FC<ModalType & addFolderModalType> = ({
         parent_id: item?.id,
         name: subfolder?.name,
       });
-    // addNewFolder({
-    //   user_id: 1,
-    //   id: newFolderId,
-    //   parent_id: item?.id,
-    //   name: subfolder?.name,
-    // });
+    addNewFolder({
+      user_id: user?.uid,
+      id: newFolderId,
+      parent_id: item?.id,
+      name: subfolder?.name,
+    });
     setSubfolder("");
     subfolderLeaveFocusHandler();
     showSubfolderHandler();

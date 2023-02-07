@@ -1,3 +1,10 @@
+//inter 300
+export const inter_300_14_18 = {
+  fontWeight: "300",
+  fontSize: "14px",
+  lineHeight: "18px",
+};
+
 // inter_400
 export const inter_400_10_14 = {
   fontWeight: "400",
@@ -8,12 +15,6 @@ export const inter_400_12_16 = {
   fontWeight: "400",
   fontSize: "12px",
   lineHeight: "16px",
-};
-
-export const inter_300_14_18 = {
-  fontWeight: "300",
-  fontSize: "14px",
-  lineHeight: "18px",
 };
 
 export const inter_400_14_18 = {

@@ -4,25 +4,25 @@ import CustomModal from "components/ui/customModal";
 import CustomTextarea from "components/ui/customTextarea";
 import DefaultBtn from "components/ui/defaultBtn";
 import useGenerateId from "hooks/useGenerateId";
+import useGetNotes from "hooks/useGetNotes";
 import useInput from "hooks/useInput";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useAddNoteMutation } from "store/api_queries/api_idea_storage";
-import { getNotes } from "store/notes/notes.selectors";
-import { folderType } from "types/folders_types";
 import { noteType } from "types/notes_types";
-import { addNoteModalType, ModalType } from "types/ui_types";
+import { addModalType, ModalType } from "types/ui_types";
 import { auth } from "../../../firebase.config";
 import { inter_400_18_25 } from "../../../styles/fontStyles";
 
-const AddNoteForm: React.FC<ModalType & addNoteModalType> = ({
+const AddNoteForm: React.FC<ModalType & addModalType> = ({
   isOpen,
   onClose,
-  folder_id,
+  item,
+  showSubfolderHandler,
 }) => {
   const [user] = useAuthState(auth);
   const [addNote] = useAddNoteMutation();
-  const notes = getNotes();
-  console.log(notes);
+  const notes = useGetNotes(item?.id);
+
   const {
     data: note,
     setData: setNote,
@@ -34,15 +34,16 @@ const AddNoteForm: React.FC<ModalType & addNoteModalType> = ({
 
   const noteId = useGenerateId(notes);
 
-  const addNoteHandler = (e: React.FormEvent, folder_id: number) => {
+  const addNoteHandler = (e: React.FormEvent) => {
     e.preventDefault();
     const options: noteType = {
       user_id: user?.uid,
-      folder_id,
+      folder_id: item?.id,
       id: notes?.length === 0 ? 1 : noteId,
       title: note?.title,
       content: note?.content,
     };
+    showSubfolderHandler();
     addNote(options);
     onClose();
   };
@@ -63,7 +64,7 @@ const AddNoteForm: React.FC<ModalType & addNoteModalType> = ({
           as={"form"}
           flexDir={"column"}
           rowGap={"24px"}
-          onSubmit={(e) => addNoteHandler(e, folder_id)}
+          onSubmit={addNoteHandler}
           alignItems={"center"}
           w={"100%"}
           pos={"relative"}
@@ -95,7 +96,7 @@ const AddNoteForm: React.FC<ModalType & addNoteModalType> = ({
         <DefaultBtn
           title="Add"
           customStyles={{ w: "35%", alignSelf: "flex-end" }}
-          onClick={(e) => addNoteHandler(e, folder_id)}
+          onClick={addNoteHandler}
         />
       </Flex>
     </CustomModal>

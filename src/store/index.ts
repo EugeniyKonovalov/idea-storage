@@ -20,6 +20,7 @@ const foldersPersistConfig = {
 const notesPersistConfig = {
   key: "notes",
   storage,
+  whitelist: ["current_note"],
 };
 
 const rootReducer = combineReducers({

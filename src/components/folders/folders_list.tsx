@@ -14,7 +14,6 @@ const FoldersList = () => {
   const { setIsShowAddRootFolder } = useActions();
   const isShowAddRootFolder = getIsAddRootFolder();
   const folders = getFolders();
-  console.log(folders);
 
   const childrenFolder = (id: number | string) => {
     let childItems = folders?.filter((item) => item.parent_id === id);

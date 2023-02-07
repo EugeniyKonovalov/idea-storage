@@ -1,22 +1,23 @@
 import { Flex, Image, ListItem, Text, useDisclosure } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AppChildrensType from "types/app_props_type";
 import { subFoldersType } from "types/folders_types";
 import { inter_400_14_18 } from "../../../styles/fontStyles";
 import FolderIcon from "assets/image/folder.png";
 import OpenFolderIcon from "assets/image/open-folder.png";
-import AddFolderIcon from "assets/image/add-folder-white.png";
-import AddDocumentIcon from "assets/image/add-document-1-white.png";
-import EditFolderIcon from "assets/image/edit.png";
-import DeleteFolderIcon from "assets/image/delete.png";
 import AddFolderForm from "./add_folder_form";
 import AddNoteForm from "components/notes/add_note_form";
 import useGetNotes from "hooks/useGetNotes";
+import SubFolderIcon from "./sub_folder_icon";
+import FolderNotes from "../notes/folder_notes";
+import { noteType } from "types/notes_types";
+import useAppRouter from "hooks/useAppRouter";
 
 const SubFolder: React.FC<AppChildrensType & subFoldersType> = ({
   item,
   children,
 }) => {
+  const { router } = useAppRouter();
   const {
     isOpen: isAddNewFolder,
     onOpen: isOpenAddNewFolder,
@@ -32,13 +33,21 @@ const SubFolder: React.FC<AppChildrensType & subFoldersType> = ({
 
   const openFolderHandler = () => {
     setIsOpen(!isOpen);
+    router.push(`?folder=${item?.name?.toLowerCase()?.split(" ")?.join("_")}`);
   };
   const showSubfolderHandler = () => {
     setIsOpen(true);
   };
 
-  const notes = useGetNotes(item?.id);
-  console.log(notes);
+  const notes: noteType[] = useGetNotes(item?.id);
+
+  notes?.sort((a, b) => (a.id < b.id ? 1 : -1));
+
+  useEffect(() => {
+    router.query.folder === item?.name?.toLowerCase()?.split(" ")?.join("_") &&
+      setIsOpen(true);
+  }, []);
+
   return (
     <ListItem>
       {isAddNewFolder && (
@@ -53,7 +62,8 @@ const SubFolder: React.FC<AppChildrensType & subFoldersType> = ({
         <AddNoteForm
           isOpen={isAddNewNote}
           onClose={isCloseAddNewNote}
-          folder_id={item?.id}
+          item={item}
+          showSubfolderHandler={showSubfolderHandler}
         />
       )}
       <Flex
@@ -74,45 +84,21 @@ const SubFolder: React.FC<AppChildrensType & subFoldersType> = ({
           <Text {...inter_400_14_18}>{item.name}</Text>
         </Flex>
         {hoverFolder && (
-          <Flex alignItems={"center"} columnGap={"8px"}>
-            <Image
-              src={AddFolderIcon.src}
-              w={"24px"}
-              alt={"folder icon"}
-              cursor={"pointer"}
-              title={"Add folder"}
-              onClick={isOpenAddNewFolder}
-            />
-            <Image
-              src={AddDocumentIcon.src}
-              w={"18px"}
-              alt={"document icon"}
-              cursor={"pointer"}
-              title={"Add document"}
-              onClick={isOpenAddNewNote}
-            />
-            <Image
-              src={EditFolderIcon.src}
-              w={"18px"}
-              alt={"folder icon"}
-              cursor={"pointer"}
-              title={"Edit name"}
-            />
-            <Image
-              src={DeleteFolderIcon.src}
-              w={"18px"}
-              alt={"folder icon"}
-              cursor={"pointer"}
-              title={"Remove folder"}
-            />
-          </Flex>
+          <SubFolderIcon
+            isOpenAddNewFolder={isOpenAddNewFolder}
+            isOpenAddNewNote={isOpenAddNewNote}
+          />
         )}
       </Flex>
       {isOpen && (
         <>
-          {notes?.map((item) => (
-            <Text key={item.id}>{item?.title}</Text>
-          ))}
+          {notes?.length !== 0 && (
+            <Flex flexDir={"column"} ml={"16px"} py={"8px"}>
+              {notes?.map((item) => (
+                <FolderNotes key={item.id} item={item} />
+              ))}
+            </Flex>
+          )}
         </>
       )}
       {isOpen && <>{children}</>}

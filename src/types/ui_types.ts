@@ -32,12 +32,9 @@ export interface ModalType {
   isOpen: boolean;
   onClose: () => void;
 }
-export interface addFolderModalType {
+export interface addModalType {
   item: folderType;
   showSubfolderHandler: () => void;
-}
-export interface addNoteModalType {
-  folder_id: number;
 }
 
 export interface validationTextType {

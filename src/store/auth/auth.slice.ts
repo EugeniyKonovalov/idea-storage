@@ -38,6 +38,21 @@ const authSlice = createSlice({
       state.isError = true;
       state.isLoggedIn = false;
     });
+    builder.addCase(authExtraActions.signIn.pending, (state: authType) => {
+      state.isLoading = true;
+    });
+    builder.addCase(authExtraActions.signIn.fulfilled, (state, action) => {
+      state.token = action.payload?.refreshToken;
+      state.isLoggedIn = true;
+      state.isLoading = false;
+      state.isError = false;
+      state.isSuccess = true;
+    });
+    builder.addCase(authExtraActions.signIn.rejected, (state: authType) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.isLoggedIn = false;
+    });
   },
 });
 

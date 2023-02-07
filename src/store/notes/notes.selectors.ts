@@ -1,5 +1,6 @@
 import { useAppSelector } from "hooks/useRedux";
 
-const getNotes = () => useAppSelector((state) => state.notes.notes);
+const getCurrentNote = () =>
+  useAppSelector((state) => state.notes.current_note);
 
-export { getNotes };
+export { getCurrentNote };
