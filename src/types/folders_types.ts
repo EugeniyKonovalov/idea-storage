@@ -17,6 +17,9 @@ export interface subFoldersType {
   item: folderType;
 }
 export interface subFoldersIconType {
+  item: folderType;
   isOpenAddNewFolder: () => void;
   isOpenAddNewNote: () => void;
+  deleteFolderHandler: (folder_id: number) => void;
+  isEditFolderNameHandler: () => void;
 }

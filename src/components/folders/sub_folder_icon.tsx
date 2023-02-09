@@ -7,8 +7,11 @@ import { Flex, Image } from "@chakra-ui/react";
 import { subFoldersIconType } from "types/folders_types";
 
 const SubFolderIcon: React.FC<subFoldersIconType> = ({
+  item,
   isOpenAddNewFolder,
   isOpenAddNewNote,
+  deleteFolderHandler,
+  isEditFolderNameHandler,
 }) => {
   return (
     <Flex alignItems={"center"} columnGap={"8px"}>
@@ -34,6 +37,7 @@ const SubFolderIcon: React.FC<subFoldersIconType> = ({
         alt={"folder icon"}
         cursor={"pointer"}
         title={"Edit name"}
+        onClick={isEditFolderNameHandler}
       />
       <Image
         src={DeleteFolderIcon.src}
@@ -41,6 +45,7 @@ const SubFolderIcon: React.FC<subFoldersIconType> = ({
         alt={"folder icon"}
         cursor={"pointer"}
         title={"Remove folder"}
+        onClick={() => deleteFolderHandler(item?.id)}
       />
     </Flex>
   );
