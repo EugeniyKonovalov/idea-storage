@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import AppChildrensType from "types/app_props_type";
-import { subFoldersType } from "types/folders_types";
+import { folderType, subFoldersType } from "types/folders_types";
 import { inter_400_14_18 } from "../../../styles/fontStyles";
 import FolderIcon from "assets/image/folder.png";
 import OpenFolderIcon from "assets/image/open-folder.png";
@@ -23,9 +23,7 @@ import {
   useDeleteFolderMutation,
   useEditFolderMutation,
 } from "store/api_queries/api_idea_storage";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../../firebase.config";
-import AddRootFolder from "./add_root_folder";
+
 import useInput from "hooks/useInput";
 
 const SubFolder: React.FC<AppChildrensType & subFoldersType> = ({
@@ -33,7 +31,6 @@ const SubFolder: React.FC<AppChildrensType & subFoldersType> = ({
   children,
 }) => {
   const { router } = useAppRouter();
-  const [user] = useAuthState(auth);
   const {
     isOpen: isAddNewFolder,
     onOpen: isOpenAddNewFolder,
@@ -74,14 +71,15 @@ const SubFolder: React.FC<AppChildrensType & subFoldersType> = ({
     setIsEditFolder(!isEditFolder);
   };
 
-  const editFolderHandler = (event: React.FormEvent, folder_id: number) => {
+  const editFolderHandler = (event: React.FormEvent, item: folderType) => {
     event?.preventDefault();
     setIsEditFolder(false);
-    editFolder({ user_id: user?.uid, id: folder_id, folder: folder });
+    editFolder({ user_id: item?.user_id, id: item?.id, folder: folder });
   };
 
-  const deleteFolderHandler = (folder_id: number) => {
-    deleteFolder({ user_id: user?.uid, id: folder_id });
+  const deleteFolderHandler = (item: folderType) => {
+    deleteFolder({ user_id: item?.user_id, id: item?.id });
+    router.back();
   };
 
   useEffect(() => {
@@ -128,7 +126,7 @@ const SubFolder: React.FC<AppChildrensType & subFoldersType> = ({
           />
           <Flex
             as={"form"}
-            onSubmit={(e) => editFolderHandler(e, item?.id)}
+            onSubmit={(e) => editFolderHandler(e, item)}
             w={"fit-content"}
             border={isEditFolder ? "1px solid #fff" : ""}
             h={"30px"}

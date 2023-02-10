@@ -7,10 +7,12 @@ import { noteType } from "types/notes_types";
 import { inter_300_14_18 } from "../../../styles/fontStyles";
 import useAppRouter from "hooks/useAppRouter";
 import { useActions } from "hooks/useActions";
+import { useDeleteNoteMutation } from "store/api_queries/api_idea_storage";
 
 const FolderNotes: React.FC<{ item: noteType }> = ({ item }) => {
   const { router } = useAppRouter();
   const { setCurrentNote } = useActions();
+  const [deleteNote] = useDeleteNoteMutation();
   const [hoverNote, setHoverNote] = useState<boolean>(false);
   const selectedNote =
     router.query.note === item?.title?.toLowerCase()?.split(" ")?.join("_");
@@ -23,6 +25,15 @@ const FolderNotes: React.FC<{ item: noteType }> = ({ item }) => {
         ?.split(" ")
         ?.join("_")}`
     );
+  };
+
+  const deleteNoteHandler = (note: noteType) => {
+    deleteNote({
+      user_id: note?.user_id,
+      folder_id: note?.folder_id,
+      note_id: note?.id,
+    });
+    router.back();
   };
 
   return (
@@ -58,6 +69,7 @@ const FolderNotes: React.FC<{ item: noteType }> = ({ item }) => {
             alt={"folder icon"}
             cursor={"pointer"}
             title={"Remove note"}
+            onClick={() => deleteNoteHandler(item)}
           />
         </Flex>
       )}

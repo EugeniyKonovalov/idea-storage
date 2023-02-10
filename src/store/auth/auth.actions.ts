@@ -5,7 +5,7 @@ import {
   updateProfile,
   User,
 } from "firebase/auth";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { userType } from "types/auth_types";
 import { auth, db } from "../../../firebase.config";
 

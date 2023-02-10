@@ -20,6 +20,6 @@ export interface subFoldersIconType {
   item: folderType;
   isOpenAddNewFolder: () => void;
   isOpenAddNewNote: () => void;
-  deleteFolderHandler: (folder_id: number) => void;
+  deleteFolderHandler: (item: folderType) => void;
   isEditFolderNameHandler: () => void;
 }

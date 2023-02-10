@@ -11,6 +11,7 @@ import {
   where,
 } from "firebase/firestore";
 import { folderType } from "types/folders_types";
+import { noteType } from "types/notes_types";
 import { db } from "../../../firebase.config";
 
 export const ideaStorageApi = createApi({
@@ -90,7 +91,7 @@ export const ideaStorageApi = createApi({
               where("parent_id", "==", options?.id)
             );
             const querySnapshot = await getDocs(ref);
-            querySnapshot?.forEach((folder) => {
+            querySnapshot?.forEach(async (folder) => {
               deleteDoc(
                 doc(
                   db,
@@ -100,6 +101,29 @@ export const ideaStorageApi = createApi({
                   `${folder.data().id}`
                 )
               );
+              const notes = await getDocs(
+                collection(
+                  db,
+                  "users",
+                  `${options?.user_id}`,
+                  "folders",
+                  `${folder.data().id}`,
+                  "notes"
+                )
+              );
+              notes?.forEach((note: any) => {
+                deleteDoc(
+                  doc(
+                    db,
+                    "users",
+                    `${options?.user_id}`,
+                    "folders",
+                    `${folder.data().id}`,
+                    "notes",
+                    `${note.data().id}`
+                  )
+                );
+              });
               subfolderDelete({
                 user_id: options?.user_id,
                 id: folder.data().id,
@@ -110,13 +134,36 @@ export const ideaStorageApi = createApi({
           await deleteDoc(
             doc(db, "users", `${options?.user_id}`, "folders", `${options.id}`)
           );
+          const mainFolderNote = await getDocs(
+            collection(
+              db,
+              "users",
+              `${options?.user_id}`,
+              "folders",
+              `${options?.id}`,
+              "notes"
+            )
+          );
+          mainFolderNote?.forEach((note) => {
+            deleteDoc(
+              doc(
+                db,
+                "users",
+                `${options?.user_id}`,
+                "folders",
+                `${options?.id}`,
+                "notes",
+                `${note.data().id}`
+              )
+            );
+          });
           return { data: null };
         } catch (error: any) {
           console.error(error.message);
           return { error: error.message };
         }
       },
-      // invalidatesTags: ["Folders"],
+      invalidatesTags: ["Folders"],
     }),
     addNote: builder.mutation({
       async queryFn(options) {
@@ -140,6 +187,52 @@ export const ideaStorageApi = createApi({
         }
       },
     }),
+    editNote: builder.mutation({
+      async queryFn(options) {
+        try {
+          await updateDoc(
+            doc(
+              db,
+              "users",
+              `${options?.user_id}`,
+              "folders",
+              `${options?.folder_id}`,
+              "notes",
+              `${options?.notes_id}`
+            ),
+            options?.note
+          );
+          return { data: null };
+        } catch (error: any) {
+          console.error(error.message);
+          return { error: error.message };
+        }
+      },
+    }),
+
+    deleteNote: builder.mutation({
+      async queryFn(options) {
+        try {
+          await deleteDoc(
+            doc(
+              db,
+              "users",
+              `${options?.user_id}`,
+              "folders",
+              `${options?.folder_id}`,
+              "notes",
+              `${options?.note_id}`
+            )
+          );
+
+          return { data: null };
+        } catch (error: any) {
+          console.error(error.message);
+          return { error: error.message };
+        }
+      },
+      invalidatesTags: ["Notes"],
+    }),
   }),
 });
 
@@ -148,4 +241,6 @@ export const {
   useEditFolderMutation,
   useDeleteFolderMutation,
   useAddNoteMutation,
+  useEditNoteMutation,
+  useDeleteNoteMutation,
 } = ideaStorageApi;

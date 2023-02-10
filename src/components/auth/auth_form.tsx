@@ -1,6 +1,5 @@
 import {
   Button,
-  chakra,
   Flex,
   FormControl,
   Heading,
@@ -15,20 +14,15 @@ import SignInImg from "assets/image/graduation.png";
 import SignUpImg from "assets/image/book.png";
 import { inter_400_18_25, inter_600_18_25 } from "../../../styles/fontStyles";
 import useInput from "hooks/useInput";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../../firebase.config";
 import { userType } from "types/auth_types";
 import { getIsShowPassword } from "store/auth/auth.selectors";
 import { useActions } from "hooks/useActions";
-
-const Span = chakra("span", {});
 
 const AuthForm: React.FC = () => {
   const { router } = useAppRouter();
   const { signUp, signIn } = useActions();
   const isSignUp = router.pathname === "/sign_up";
   const isShowPassword = getIsShowPassword();
-  const [user] = useAuthState(auth);
   const { data: authData, changeHandler: authChangeHandler } = useInput();
 
   const signInTabHandler = () => {

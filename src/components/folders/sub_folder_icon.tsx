@@ -45,7 +45,7 @@ const SubFolderIcon: React.FC<subFoldersIconType> = ({
         alt={"folder icon"}
         cursor={"pointer"}
         title={"Remove folder"}
-        onClick={() => deleteFolderHandler(item?.id)}
+        onClick={() => deleteFolderHandler(item)}
       />
     </Flex>
   );
