@@ -12,6 +12,7 @@ export interface InputsType {
   input?: InputsObjType;
   customStyles?: any;
   maxLength?: number;
+  hasError?: boolean;
   onChange?: (event: any) => void;
   onFocus?: () => void;
   onClick?: () => void;
@@ -20,6 +21,7 @@ export interface InputsType {
 }
 
 export interface BtnType {
+  type?: string;
   title?: string;
   disabled?: boolean;
   customStyles?: any;
@@ -39,7 +41,19 @@ export interface addModalType {
 
 export interface validationTextType {
   isExistName: boolean;
-  folderName: string;
+  enteredName: string;
   isTouched: boolean;
-  topPosition: string | number;
+  topPosition?: string | number;
+  starTopPosition?: string | number;
+  leftPosition?: number | string;
+}
+
+export interface authValidationTextType {
+  content: string;
+}
+
+export interface mobileMenuType {
+  logOutHandler: () => void;
+  openLoginHandler: () => void;
+  isOpen: boolean;
 }

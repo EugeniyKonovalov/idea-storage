@@ -1,18 +1,22 @@
-import { Avatar, Flex, Heading, Image, Text } from "@chakra-ui/react";
+import { Flex, Heading, Image, Text, useMediaQuery } from "@chakra-ui/react";
 import LogoImg from "assets/image/notes-icon.png";
 import DefaultBtn from "components/ui/defaultBtn";
-import SearchInput from "components/ui/searchInput";
-import { inter_400_18_25, inter_700_32_48 } from "../../../styles/fontStyles";
 import { signOut } from "firebase/auth";
 import { useActions } from "hooks/useActions";
 import useAppRouter from "hooks/useAppRouter";
-import React from "react";
+import React, { useState } from "react";
 import { getIsLoggedIn } from "store/auth/auth.selectors";
 import { auth } from "../../../firebase.config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import UserIcon from "assets/image/user.png";
+import MobileMenuIcon from "assets/svg/mobile-menu.svg";
+import CloseMobileMenu from "assets/svg/close-mobile-menu.svg";
+import MobileMenu from "./mobile_menu";
 
 const Header: React.FC = () => {
+  const [isSmallScreen] = useMediaQuery("(max-width: 991px)");
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   const { router } = useAppRouter();
   const { logOutState } = useActions();
   const isLoggedIn = getIsLoggedIn();
@@ -29,10 +33,7 @@ const Header: React.FC = () => {
   const logOutHandler = () => {
     logOutState();
     signOut(auth);
-  };
-
-  const submitHandler = (event: React.FormEvent) => {
-    event?.preventDefault();
+    router.push("/");
   };
 
   return (
@@ -57,41 +58,83 @@ const Header: React.FC = () => {
         >
           <Flex
             alignItems={"center"}
-            columnGap={"32px"}
+            columnGap={{ base: "18px", sm: "32px" }}
             cursor={"pointer"}
             onClick={toHomePageHandler}
           >
             <Image src={LogoImg.src} w={"50px"} h={"50px"} alt="Logo" />
-            <Heading {...inter_700_32_48}>Idea Storage</Heading>
+            <Heading fontSize={{ base: "28px", sm: "32px" }} fontWeight={"700"}>
+              Idea Store
+            </Heading>
           </Flex>
-          {router.pathname !== "/login" && (
-            <Flex alignItems={"center"} columnGap={"24px"}>
-              {isLoggedIn && <SearchInput onSubmit={submitHandler} />}
-              {isLoggedIn && (
-                <Flex
-                  border={"1px solid #89b0ae"}
-                  borderRadius={"5px"}
-                  columnGap={"12px"}
-                  px={"12px"}
-                  minW={"fit-content"}
-                  h={"40px"}
-                  alignItems={"center"}
-                  justifyContent={"space-between"}
-                >
-                  <Image src={UserIcon.src} w={"32px"} alt={"User icon"} />
-                  <Text {...inter_400_18_25}>
-                    {user?.displayName?.split(" ")[0]}
-                  </Text>
-                </Flex>
-              )}
-              {!isLoggedIn && (
-                <DefaultBtn title="Login" onClick={openLoginHandler} />
-              )}
-              {isLoggedIn && (
-                <DefaultBtn title="Logout" onClick={logOutHandler} />
-              )}
-            </Flex>
+          {!isSmallScreen && (
+            <>
+              {router.pathname !== "/sign_in" &&
+                router.pathname !== "/sign_up" && (
+                  <Flex alignItems={"center"} columnGap={"24px"}>
+                    {isLoggedIn && (
+                      <Flex
+                        border={"1px solid #89b0ae"}
+                        borderRadius={"5px"}
+                        columnGap={"12px"}
+                        px={"12px"}
+                        minW={"fit-content"}
+                        h={"40px"}
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
+                      >
+                        <Image
+                          src={UserIcon.src}
+                          w={"32px"}
+                          alt={"User icon"}
+                        />
+                        <Text fontSize={"18px"} fontWeight={"400"}>
+                          {user?.displayName?.split(" ")[0]}
+                        </Text>
+                      </Flex>
+                    )}
+                    {!isLoggedIn && (
+                      <DefaultBtn title="Login" onClick={openLoginHandler} />
+                    )}
+                    {isLoggedIn && (
+                      <DefaultBtn title="Logout" onClick={logOutHandler} />
+                    )}
+                  </Flex>
+                )}
+            </>
           )}
+          {isSmallScreen &&
+            router.pathname !== "/sign_in" &&
+            router.pathname !== "/sign_up" && (
+              <Flex alignItems={"center"} flexDir={"column"}>
+                {!isOpen ? (
+                  <Flex
+                    cursor={"pointer"}
+                    onClick={() => setIsOpen(true)}
+                    transform={isOpen ? "rotate(360deg)" : ""}
+                    transition="all 1.2s ease-in"
+                  >
+                    <MobileMenuIcon />
+                  </Flex>
+                ) : (
+                  <Flex
+                    cursor={"pointer"}
+                    onClick={() => setIsOpen(false)}
+                    transform={isOpen ? "rotate(360deg)" : ""}
+                    transition="all 0.6s ease-in-out"
+                  >
+                    <CloseMobileMenu />
+                  </Flex>
+                )}
+                {
+                  <MobileMenu
+                    logOutHandler={logOutHandler}
+                    openLoginHandler={openLoginHandler}
+                    isOpen={isOpen}
+                  />
+                }
+              </Flex>
+            )}
         </Flex>
       </Flex>
     </>

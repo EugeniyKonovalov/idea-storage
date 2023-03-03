@@ -1,17 +1,31 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { chakra, Flex, Text } from "@chakra-ui/react";
 import CustomInput from "components/ui/customInput";
 import CustomModal from "components/ui/customModal";
 import CustomTextarea from "components/ui/customTextarea";
 import DefaultBtn from "components/ui/defaultBtn";
+import ValidationText from "components/ui/validation_text";
+import { useActions } from "hooks/useActions";
 import useGenerateId from "hooks/useGenerateId";
 import useGetNotes from "hooks/useGetNotes";
 import useInput from "hooks/useInput";
+import { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useAddNoteMutation } from "store/api_queries/api_idea_storage";
+import {
+  useAddNoteMutation,
+  useEditNoteMutation,
+  useGetAllNotesQuery,
+} from "store/api_queries/api_idea_storage";
+import { getIsExistName } from "store/folder/folder.selectors";
+import {
+  getAllNotes,
+  getEditNote,
+  getIsEditNote,
+} from "store/notes/notes.selectors";
 import { noteType } from "types/notes_types";
 import { addModalType, ModalType } from "types/ui_types";
 import { auth } from "../../../firebase.config";
-import { inter_400_18_25 } from "../../../styles/fontStyles";
+
+const Span = chakra("span", {});
 
 const AddNoteForm: React.FC<ModalType & addModalType> = ({
   isOpen,
@@ -19,9 +33,18 @@ const AddNoteForm: React.FC<ModalType & addModalType> = ({
   item,
   showSubfolderHandler,
 }) => {
+  const { isEditNote, isExistName, setEditNote, setCurrentNote, isNoteForm } =
+    useActions();
   const [user] = useAuthState(auth);
+  const { data } = useGetAllNotesQuery(user && user?.uid);
   const [addNote] = useAddNoteMutation();
+  const [editNote] = useEditNoteMutation();
+  const isExist = getIsExistName();
   const notes = useGetNotes(item?.id);
+  const isEdit = getIsEditNote();
+  const currentEditNote = getEditNote();
+
+  const allNotes = getAllNotes();
 
   const {
     data: note,
@@ -36,22 +59,62 @@ const AddNoteForm: React.FC<ModalType & addModalType> = ({
 
   const addNoteHandler = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isEdit && allNotes?.map((item) => item.title)?.includes(note?.title)) {
+      isExistName(true);
+      return;
+    }
+
     const options: noteType = {
       user_id: user?.uid,
       folder_id: item?.id,
-      id: notes?.length === 0 ? 1 : noteId,
+      id: !isEdit ? (notes?.length === 0 ? 1 : noteId) : note?.id,
       title: note?.title,
-      content: note?.content,
+      content: note?.content ? note?.content : "",
     };
     showSubfolderHandler();
-    addNote(options);
-    onClose();
+    !isEdit && note?.title && addNote(options);
+    isEdit && note?.title && editNote(options);
+    isEdit && note?.title && setCurrentNote(options);
+    note?.title && onCloseHandler();
   };
 
+  const onCloseHandler = () => {
+    onClose();
+    isEditNote(false);
+    isNoteForm(false);
+    setNote(null);
+    setEditNote(null);
+  };
+
+  useEffect(() => {
+    isEdit && setNote(currentEditNote);
+    !isEdit && setNote(null);
+  }, [isEdit]);
+
+  useEffect(() => {
+    isExistName(
+      allNotes?.map((item) => item.title)?.includes(note?.title) ? true : false
+    );
+  }, [note?.title]);
+
   return (
-    <CustomModal isOpen={isOpen} onClose={onClose}>
-      <Text {...inter_400_18_25} color={"#89b0ae"} mt={"12px"} ml={"24px"}>
-        Add subfolder
+    <CustomModal isOpen={isOpen} onClose={onCloseHandler}>
+      <Text
+        fontSize={"18px"}
+        fontWeight={"400"}
+        color={"#89b0ae"}
+        mt={"12px"}
+        ml={"24px"}
+      >
+        {!isEdit && " Add note"}
+        {isEdit && (
+          <>
+            Edit note{" "}
+            <Span fontWeight={"700"} color={"#FFBE55"}>
+              {currentEditNote?.title}
+            </Span>
+          </>
+        )}
       </Text>
       <Flex
         flexDir={"column"}
@@ -69,18 +132,27 @@ const AddNoteForm: React.FC<ModalType & addModalType> = ({
           w={"100%"}
           pos={"relative"}
         >
-          <CustomInput
-            input={{
-              id: "title",
-              type: "text",
-              value: note?.title || "",
-              placeholder: "Enter note title",
-            }}
-            maxLength={20}
-            customStyles={{ h: "40px" }}
-            onChange={noteChangeHandler}
-            onBlur={noteBlurHandler}
-          />
+          <Flex w={"100%"} pos={"relative"}>
+            <CustomInput
+              input={{
+                id: "title",
+                type: "text",
+                value: note?.title || "",
+                placeholder: "Enter note title",
+              }}
+              maxLength={10}
+              customStyles={{ h: "40px" }}
+              onChange={noteChangeHandler}
+              onBlur={noteBlurHandler}
+            />
+            <ValidationText
+              isExistName={isExist}
+              topPosition={"42px"}
+              enteredName={note?.title}
+              isTouched={noteIsTouched}
+              leftPosition={"0"}
+            />
+          </Flex>
           <CustomTextarea
             input={{
               id: "content",
@@ -94,7 +166,7 @@ const AddNoteForm: React.FC<ModalType & addModalType> = ({
           />
         </Flex>
         <DefaultBtn
-          title="Add"
+          title={!isEdit ? "Add" : "Edit"}
           customStyles={{ w: "35%", alignSelf: "flex-end" }}
           onClick={addNoteHandler}
         />

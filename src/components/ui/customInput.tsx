@@ -1,5 +1,4 @@
 import { Flex, FormLabel, Input } from "@chakra-ui/react";
-import { kMaxLength } from "buffer";
 import React from "react";
 import { InputsType } from "types/ui_types";
 

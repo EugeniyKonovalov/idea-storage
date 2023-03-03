@@ -1,149 +1,233 @@
+import React from "react";
 import {
+  Box,
   Button,
   Flex,
   FormControl,
   Heading,
   Image,
   Text,
+  useMediaQuery,
 } from "@chakra-ui/react";
-import CustomInput from "components/ui/customAuthInput";
+import CustomAuthInput from "components/ui/customAuthInput";
 import DefaultBtn from "components/ui/defaultBtn";
 import useAppRouter from "hooks/useAppRouter";
-import React from "react";
 import SignInImg from "assets/image/graduation.png";
 import SignUpImg from "assets/image/book.png";
-import { inter_400_18_25, inter_600_18_25 } from "../../../styles/fontStyles";
-import useInput from "hooks/useInput";
 import { userType } from "types/auth_types";
 import { getIsShowPassword } from "store/auth/auth.selectors";
 import { useActions } from "hooks/useActions";
+import useAuthInput from "hooks/useAuthInput";
+import AuthValidationText from "components/ui/auth_validation_text";
 
 const AuthForm: React.FC = () => {
+  const [isTablet] = useMediaQuery("(max-width: 768px)");
   const { router } = useAppRouter();
   const { signUp, signIn } = useActions();
   const isSignUp = router.pathname === "/sign_up";
   const isShowPassword = getIsShowPassword();
-  const { data: authData, changeHandler: authChangeHandler } = useInput();
+
+  const emailFormat = new RegExp(
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  );
+  const isEmail = (value: string) => emailFormat.test(value);
+  const isPasswordLength = (value: string) => value?.trim()?.length >= 6;
+  const isNotEmpty = (value: string) => value?.trim() !== "";
+
+  const {
+    value: enteredFirstName,
+    changeHandler: firstNameChangeHandler,
+    blurHandler: firstNameBlurHandler,
+    hasError: firstNameHasError,
+    isValid: firstNameIsValid,
+  } = useAuthInput(isNotEmpty);
+  const {
+    value: enteredLastName,
+    changeHandler: lastNameChangeHandler,
+    blurHandler: lastNameBlurHandler,
+    hasError: lastNameHasError,
+    isValid: lastNameIsValid,
+  } = useAuthInput(isNotEmpty);
+  const {
+    value: enteredEmail,
+    changeHandler: emailChangeHandler,
+    blurHandler: emailBlurHandler,
+    hasError: emailHasError,
+    isValid: emailIsValid,
+  } = useAuthInput(isEmail);
+  const {
+    value: enteredPassword,
+    changeHandler: passwordChangeHandler,
+    blurHandler: passwordBlurHandler,
+    hasError: passwordHasError,
+    isValid: passwordIsValid,
+  } = useAuthInput(isPasswordLength);
 
   const signInTabHandler = () => {
     router.push("/sign_in");
   };
+
   const signUpTabHandler = () => {
     router.push("/sign_up");
   };
 
-  const submitHandler = async () => {
+  const formBlurHandler = () => {
+    firstNameBlurHandler();
+    lastNameBlurHandler();
+    emailBlurHandler();
+    passwordBlurHandler();
+  };
+
+  let formIsValid = false;
+  isSignUp
+    ? firstNameIsValid &&
+      lastNameIsValid &&
+      emailIsValid &&
+      passwordIsValid &&
+      (formIsValid = true)
+    : emailIsValid && passwordIsValid && (formIsValid = true);
+
+  const submitHandler = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!formIsValid) return;
+    console.log("run");
     const signUpOptions: userType = {
-      name: `${authData?.first_name} ${authData?.last_name}`,
-      email: authData?.email,
-      password: authData?.password,
+      name: `${enteredFirstName} ${enteredLastName}`,
+      email: enteredEmail,
+      password: enteredPassword,
     };
     const signInOptions: userType = {
-      email: authData?.email,
-      password: authData?.password,
+      email: enteredEmail,
+      password: enteredPassword,
     };
-
+    formBlurHandler();
     isSignUp ? signUp(signUpOptions) : signIn(signInOptions);
   };
 
   return (
     <Flex
       justifyContent={"center"}
-      alignItems={"center"}
-      h={"calc(100vh - 140px)"}
+      my={{ base: "24px", md: "64px" }}
+      h={{
+        base: "calc(100vh - 140px - 48px)",
+        md: "calc(100vh - 140px - 128px)",
+      }}
+      bgImage={`url('${!isSignUp ? SignInImg.src : SignUpImg.src}')`}
+      bgSize={"contain"}
+      bgRepeat={"no-repeat"}
+      bgPos={"bottom right"}
     >
       <Flex
         flexDir={"column"}
-        h={"60%"}
+        h={{ base: "fit-content" }}
         px={"32px"}
-        pt={"24px"}
+        py={"12px"}
         bg={!isSignUp ? "#505568" : "#89b0ae"}
         transition={"all 0.07s"}
-        minW={"350px"}
       >
         <Heading as={"h2"}>{isSignUp ? "Sign Up" : "Sign In"}</Heading>
         <FormControl
-          display={"flex"}
-          flexDir={"column"}
+          as={"form"}
+          onSubmit={submitHandler}
+          display={"grid"}
+          gridTemplateColumns={
+            !isSignUp ? { base: "1fr" } : { base: "1fr", md: "repeat(2, 1fr)" }
+          }
+          columnGap={"24px"}
           pt={"12px"}
-          rowGap={"8px"}
+          rowGap={"14px"}
         >
           {isSignUp && (
-            <CustomInput
-              label="First Name"
-              input={{
-                id: "first_name",
-                type: "text",
-                value: authData?.first_name || "",
-                placeholder: "Enter first name",
-              }}
-              onChange={authChangeHandler}
-            />
+            <>
+              <Box pos={"relative"}>
+                <CustomAuthInput
+                  label="First Name"
+                  input={{
+                    id: "first_name",
+                    type: "text",
+                    value: enteredFirstName,
+                    placeholder: "Enter first name",
+                  }}
+                  onChange={firstNameChangeHandler}
+                  onBlur={firstNameBlurHandler}
+                  hasError={firstNameHasError}
+                />
+                {firstNameHasError && (
+                  <AuthValidationText content="Field must be fill!" />
+                )}
+              </Box>
+              <Box pos={"relative"}>
+                <CustomAuthInput
+                  label="Last Name"
+                  input={{
+                    id: "last_name",
+                    type: "text",
+                    value: enteredLastName,
+                    placeholder: "Enter last name",
+                  }}
+                  onChange={lastNameChangeHandler}
+                  onBlur={lastNameBlurHandler}
+                  hasError={lastNameHasError}
+                />
+                {lastNameHasError && (
+                  <AuthValidationText content="Field must be fill!" />
+                )}
+              </Box>
+            </>
           )}
-          {isSignUp && (
-            <CustomInput
-              label="Last Name"
+          <Box pos={"relative"}>
+            <CustomAuthInput
+              label="Email"
               input={{
-                id: "last_name",
+                id: "email",
                 type: "text",
-                value: authData?.last_name || "",
-                placeholder: "Enter last name",
+                value: enteredEmail || "",
+                placeholder: "Enter email",
               }}
-              onChange={authChangeHandler}
+              onChange={emailChangeHandler}
+              onBlur={emailBlurHandler}
+              hasError={emailHasError}
             />
-          )}
-          <CustomInput
-            label="Email"
-            input={{
-              id: "email",
-              type: "text",
-              value: authData?.email || "",
-              placeholder: "Enter email",
-            }}
-            onChange={authChangeHandler}
-          />
-          <CustomInput
-            label="Password"
-            input={{
-              id: "password",
-              type: !isShowPassword ? "password" : "text",
-              value: authData?.password || "",
-              placeholder: "Enter password",
-            }}
-            onChange={authChangeHandler}
-          />
+            {emailHasError && (
+              <AuthValidationText content="Please enter correct email!" />
+            )}
+          </Box>
+          <Box pos={"relative"}>
+            <CustomAuthInput
+              label="Password"
+              input={{
+                id: "password",
+                type: !isShowPassword ? "password" : "text",
+                value: enteredPassword || "",
+                placeholder: "Enter password",
+              }}
+              onChange={passwordChangeHandler}
+              onBlur={passwordBlurHandler}
+              hasError={passwordHasError}
+            />
+            {passwordHasError && (
+              <AuthValidationText content="Enter password! Min 6 char!" />
+            )}
+          </Box>
           <DefaultBtn
+            type={"submit"}
             title={isSignUp ? "Sign Up" : "Sign In"}
             customStyles={{ bg: !isSignUp ? "#89b0ae" : "#505568", mt: "28px" }}
-            onClick={submitHandler}
           />
         </FormControl>
-      </Flex>
-      <Flex
-        flexDir={"column"}
-        h={"60%"}
-        px={"32px"}
-        pt={"24px"}
-        bg={!isSignUp ? "#89b0ae" : "#505568"}
-        transition={"all 0.07s"}
-        w={"350px"}
-        rowGap={"48px"}
-        justifyContent={"center"}
-      >
-        <Image
-          w={"286px"}
-          h={"204px"}
-          objectFit={"contain"}
-          src={!isSignUp ? SignInImg.src : SignUpImg.src}
-          alt={"people conect"}
-        />
-        <Flex alignItems={"center"} columnGap={"8px"}>
-          <Text {...inter_400_18_25} textAlign={"center"}>
+        <Flex
+          alignItems={"center"}
+          alignSelf={isSignUp ? { base: "center", sm: "end" } : "center"}
+          mt={"24px"}
+          columnGap={"8px"}
+        >
+          <Text fontSize={{ base: "16px", sm: "18px" }} textAlign={"center"}>
             {isSignUp ? "You have an account? " : "Don't have an acount? "}
           </Text>
           <Button
             variant={"unstyled"}
-            {...inter_600_18_25}
+            fontSize={{ base: "18px" }}
+            fontWeight={"600"}
             color={"#FFBE55"}
             textDecoration={"underline"}
             cursor={"pointer"}

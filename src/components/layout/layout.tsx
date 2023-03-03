@@ -16,7 +16,7 @@ const Layout: React.FC<AppChildrensType> = ({ children }) => {
         flexDir={"column"}
         mt={"70px"}
         minH={"calc(100vh - 70px - 70px)"}
-        px={"32px"}
+        px={{ base: "16px", lg: "32px" }}
         justifyContent={router.pathname === "/" ? "center" : "start"}
       >
         {children}

@@ -139,3 +139,7 @@ a {
 ::-webkit-scrollbar-thumb:hover {
   background: #89b0ae;
 }
+
+pre {
+  white-space: pre-wrap;
+}

@@ -6,6 +6,7 @@ import {
   User,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
+import { loadingErrors } from "store/errors/errors.actions";
 import { userType } from "types/auth_types";
 import { auth, db } from "../../../firebase.config";
 
@@ -35,6 +36,7 @@ const signUp = createAsyncThunk(
       );
       return user as User;
     } catch (error) {
+      thunkApi.dispatch(loadingErrors(error));
       thunkApi.rejectWithValue(error);
     }
   }
@@ -47,7 +49,8 @@ const signIn = createAsyncThunk(
       const { email, password } = options;
       const { user } = await signInWithEmailAndPassword(auth, email, password);
       return user as User;
-    } catch (error) {
+    } catch (error: any) {
+      thunkApi.dispatch(loadingErrors(error));
       thunkApi.rejectWithValue(error);
     }
   }

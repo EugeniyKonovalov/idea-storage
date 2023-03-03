@@ -8,8 +8,9 @@ import { Provider } from "react-redux";
 import store, { persistor } from "store";
 import { PersistGate } from "redux-persist/integration/react";
 import ProivateRoute from "providers/private_route";
+import ErrorProvider from "providers/error_provider";
 
-const inter: NextFont = Inter({ subsets: ["latin"] });
+export const inter: NextFont = Inter({ subsets: ["latin"] });
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -18,9 +19,11 @@ export default function App({ Component, pageProps }: AppProps) {
         <ChakraProvider theme={theme}>
           <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
-              <ProivateRoute>
-                <Component {...pageProps} />
-              </ProivateRoute>
+              <ErrorProvider>
+                <ProivateRoute>
+                  <Component {...pageProps} />
+                </ProivateRoute>
+              </ErrorProvider>
             </PersistGate>
           </Provider>
         </ChakraProvider>

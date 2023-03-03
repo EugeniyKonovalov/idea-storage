@@ -1,6 +1,6 @@
 export interface folderType {
   id: number;
-  parent_id?: number | string;
+  parent_id?: number;
   user_id?: number | string;
   name: string;
 }
@@ -15,6 +15,7 @@ export interface foldersType {
 
 export interface subFoldersType {
   item: folderType;
+  childrenFolder: (id: number) => void;
 }
 export interface subFoldersIconType {
   item: folderType;

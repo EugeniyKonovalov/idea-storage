@@ -4,13 +4,13 @@ import storage from "redux-persist/lib/storage";
 import { ideaStorageApi } from "./api_queries/api_idea_storage";
 
 import authSlice from "./auth/auth.slice";
+import errorsSlice from "./errors/errors.slice";
 import foldersSlice from "./folder/folders.slice";
 import notesSlice from "./notes/notes.slice";
 
 const authPersistConfig = {
   key: "auth",
   storage,
-
   whitelist: ["token", "isLoggedIn"],
 };
 const foldersPersistConfig = {
@@ -20,13 +20,14 @@ const foldersPersistConfig = {
 const notesPersistConfig = {
   key: "notes",
   storage,
-  whitelist: ["current_note"],
+  whitelist: [""],
 };
 
 const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authSlice),
   folders: persistReducer(foldersPersistConfig, foldersSlice),
   notes: persistReducer(notesPersistConfig, notesSlice),
+  error: errorsSlice,
   [ideaStorageApi.reducerPath]: ideaStorageApi.reducer,
 });
 

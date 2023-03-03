@@ -28,7 +28,7 @@ const authSlice = createSlice({
     });
     builder.addCase(authExtraActions.signUp.fulfilled, (state, action) => {
       state.token = action.payload?.refreshToken;
-      state.isLoggedIn = true;
+      state.isLoggedIn = !!action.payload?.refreshToken || undefined;
       state.isLoading = false;
       state.isError = false;
       state.isSuccess = true;
@@ -43,15 +43,15 @@ const authSlice = createSlice({
     });
     builder.addCase(authExtraActions.signIn.fulfilled, (state, action) => {
       state.token = action.payload?.refreshToken;
-      state.isLoggedIn = true;
+      state.isLoggedIn = !!action.payload?.refreshToken || undefined;
       state.isLoading = false;
       state.isError = false;
       state.isSuccess = true;
     });
     builder.addCase(authExtraActions.signIn.rejected, (state: authType) => {
+      state.isLoggedIn = false;
       state.isLoading = false;
       state.isError = true;
-      state.isLoggedIn = false;
     });
   },
 });

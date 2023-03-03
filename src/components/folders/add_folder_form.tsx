@@ -12,8 +12,7 @@ import { getFolders, getIsExistName } from "store/folder/folder.selectors";
 import { folderType } from "types/folders_types";
 import { addModalType, ModalType } from "types/ui_types";
 import { auth } from "../../../firebase.config";
-import { inter_400_18_25, inter_600_18_25 } from "../../../styles/fontStyles";
-import FolderValidationText from "./folder_validation_text";
+import ValidationText from "../ui/validation_text";
 
 const AddFolderForm: React.FC<ModalType & addModalType> = ({
   isOpen,
@@ -21,7 +20,7 @@ const AddFolderForm: React.FC<ModalType & addModalType> = ({
   item,
   showSubfolderHandler,
 }) => {
-  const { isExistName, addNewFolder } = useActions();
+  const { isExistName } = useActions();
   const isExist = getIsExistName();
   const [user] = useAuthState(auth);
   const [addFolder] = useAddFolderMutation();
@@ -42,6 +41,7 @@ const AddFolderForm: React.FC<ModalType & addModalType> = ({
       isExistName(true);
       return;
     }
+
     isExistName(false);
     subfolder?.name &&
       addFolder({
@@ -50,16 +50,12 @@ const AddFolderForm: React.FC<ModalType & addModalType> = ({
         parent_id: item?.id,
         name: subfolder?.name,
       });
-    addNewFolder({
-      user_id: user?.uid,
-      id: newFolderId,
-      parent_id: item?.id,
-      name: subfolder?.name,
-    });
-    setSubfolder("");
-    subfolderLeaveFocusHandler();
-    showSubfolderHandler();
-    onClose();
+    if (subfolder?.name) {
+      setSubfolder("");
+      subfolderLeaveFocusHandler();
+      showSubfolderHandler();
+      onClose();
+    }
   };
 
   useEffect(() => {
@@ -72,7 +68,13 @@ const AddFolderForm: React.FC<ModalType & addModalType> = ({
 
   return (
     <CustomModal isOpen={isOpen} onClose={onClose}>
-      <Text {...inter_400_18_25} color={"#89b0ae"} mt={"12px"} ml={"24px"}>
+      <Text
+        fontSize={"18px"}
+        fontWeight={"400"}
+        color={"#89b0ae"}
+        mt={"12px"}
+        ml={"24px"}
+      >
         Add subfolder
       </Text>
       <Flex
@@ -96,17 +98,19 @@ const AddFolderForm: React.FC<ModalType & addModalType> = ({
               value: subfolder?.name || "",
               placeholder: "Enter folder name",
             }}
-            maxLength={20}
+            maxLength={10}
             customStyles={{ h: "40px" }}
             onChange={subfolderChangeHandler}
             onBlur={subfolderBlurHandler}
           />
 
-          <FolderValidationText
+          <ValidationText
             isExistName={isExist}
-            folderName={subfolder?.name}
+            enteredName={subfolder?.name}
             isTouched={subfolderIsTouched}
-            topPosition={"60px"}
+            topPosition={"40px"}
+            starTopPosition={"60px"}
+            leftPosition={"0"}
           />
         </Flex>
         <DefaultBtn

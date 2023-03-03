@@ -5,17 +5,27 @@ import EyeClose from "assets/svg/eye-close.svg";
 import EyeOpen from "assets/svg/eye-open.svg";
 import { useActions } from "hooks/useActions";
 import { getIsShowPassword } from "store/auth/auth.selectors";
+import useAppRouter from "hooks/useAppRouter";
 
-const CustomAuthInput: React.FC<InputsType> = ({ label, input, onChange }) => {
+const CustomAuthInput: React.FC<InputsType> = ({
+  label,
+  input,
+  onChange,
+  onBlur,
+  hasError,
+}) => {
+  const { router } = useAppRouter();
   const { showPassword } = useActions();
   const isShowPassword = getIsShowPassword();
+  const isSignUp = router.pathname === "/sign_up";
 
   return (
     <Flex flexDir={"column"}>
       <FormLabel>{label}</FormLabel>
       <Flex
-        as={"form"}
-        border={"1px solid #ced4da"}
+        borderWidth={"1px"}
+        borderStyle={"solid"}
+        borderColor={hasError ? (isSignUp ? "#2c2f3a" : "#FFBE55") : "#ced4da"}
         borderRadius={"5px"}
         h={"40px"}
         ps={"16px"}
@@ -27,6 +37,7 @@ const CustomAuthInput: React.FC<InputsType> = ({ label, input, onChange }) => {
           _focus={{ boxShadow: "none" }}
           {...input}
           onChange={onChange}
+          onBlur={onBlur}
         />
         {input?.id === "password" && (
           <Flex

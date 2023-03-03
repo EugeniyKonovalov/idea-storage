@@ -5,6 +5,7 @@ import { BtnType } from "types/ui_types";
 const DefaultBtn: React.FC<AppChildrensType & BtnType> = ({
   children,
   title,
+  type,
   customStyles,
   onClick,
   disabled,
@@ -13,6 +14,7 @@ const DefaultBtn: React.FC<AppChildrensType & BtnType> = ({
 }) => {
   return (
     <Button
+      type={type && type}
       bg={"#89B0AE"}
       fontSize={"18px"}
       fontWeight={"400"}

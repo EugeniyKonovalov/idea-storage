@@ -8,4 +8,9 @@ export interface noteType {
 
 export interface notesType {
   current_note: noteType | null;
+  is_edit_note: boolean;
+  edit_note: noteType | null;
+  is_note: boolean;
+  all_notes: noteType[];
+  show_note_in_mobile: boolean;
 }

@@ -1,15 +1,10 @@
 import React from "react";
-import { Flex, Image, Text } from "@chakra-ui/react";
-import DocumentIcon from "assets/image/document-file.png";
-import { noteType } from "types/notes_types";
-import { inter_300_14_18 } from "../../../styles/fontStyles";
-import useAppRouter from "hooks/useAppRouter";
-import useGetFolders from "hooks/useGetFolders";
+import { Flex } from "@chakra-ui/react";
 import NoteDetail from "./note_detail";
 
 const Notes: React.FC = () => {
   return (
-    <Flex p={"32px 64px"}>
+    <Flex p={{ base: "32px 16px", lg: "32px 64px" }}>
       <Flex
         w={"100%"}
         minW={"320px"}

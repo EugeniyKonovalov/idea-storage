@@ -12,7 +12,7 @@ const Footer = () => {
       zIndex={100}
     >
       <Text textAlign={"center"} fontSize={"18px"}>
-        &copy; {currentYear}
+        &copy; Idea Store {currentYear}
       </Text>
     </Flex>
   );

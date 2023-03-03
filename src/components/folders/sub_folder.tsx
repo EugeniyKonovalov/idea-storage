@@ -1,15 +1,7 @@
-import {
-  Flex,
-  Image,
-  Input,
-  ListItem,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Flex, Image, Input, ListItem, useDisclosure } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import AppChildrensType from "types/app_props_type";
 import { folderType, subFoldersType } from "types/folders_types";
-import { inter_400_14_18 } from "../../../styles/fontStyles";
 import FolderIcon from "assets/image/folder.png";
 import OpenFolderIcon from "assets/image/open-folder.png";
 import AddFolderForm from "./add_folder_form";
@@ -23,14 +15,18 @@ import {
   useDeleteFolderMutation,
   useEditFolderMutation,
 } from "store/api_queries/api_idea_storage";
-
 import useInput from "hooks/useInput";
+import { useActions } from "hooks/useActions";
+import { getCurrentNote } from "store/notes/notes.selectors";
+import { getFolders } from "store/folder/folder.selectors";
 
 const SubFolder: React.FC<AppChildrensType & subFoldersType> = ({
   item,
   children,
+  childrenFolder,
 }) => {
   const { router } = useAppRouter();
+  const { setCurrentNote } = useActions();
   const {
     isOpen: isAddNewFolder,
     onOpen: isOpenAddNewFolder,
@@ -47,6 +43,8 @@ const SubFolder: React.FC<AppChildrensType & subFoldersType> = ({
   const [isEditFolder, setIsEditFolder] = useState<boolean>(false);
   const [deleteFolder] = useDeleteFolderMutation();
   const [editFolder] = useEditFolderMutation();
+  const currentNote = getCurrentNote();
+  const folders = getFolders();
 
   const {
     data: folder,
@@ -54,18 +52,17 @@ const SubFolder: React.FC<AppChildrensType & subFoldersType> = ({
     changeHandler: folderChangeHandler,
   } = useInput();
 
+  const notes: noteType[] = useGetNotes(item?.id);
+
+  notes?.sort((a, b) => (a.id < b.id ? 1 : -1));
+
   const openFolderHandler = () => {
     setIsOpen(!isOpen);
-    router.push(`?folder=${item?.name?.toLowerCase()?.split(" ")?.join("_")}`);
   };
 
   const showSubfolderHandler = () => {
     setIsOpen(true);
   };
-
-  const notes: noteType[] = useGetNotes(item?.id);
-
-  notes?.sort((a, b) => (a.id < b.id ? 1 : -1));
 
   const isEditFolderNameHandler = () => {
     setIsEditFolder(!isEditFolder);
@@ -79,17 +76,24 @@ const SubFolder: React.FC<AppChildrensType & subFoldersType> = ({
 
   const deleteFolderHandler = (item: folderType) => {
     deleteFolder({ user_id: item?.user_id, id: item?.id });
-    router.back();
+
+    const hideCurrentNote = (id: number) => {
+      const subFolders = folders?.filter(
+        (f: folderType) => f?.parent_id === id
+      );
+      subFolders?.forEach((filteredfolder: folderType) => {
+        currentNote?.folder_id === filteredfolder?.id && setCurrentNote(null);
+        hideCurrentNote(filteredfolder?.id);
+      });
+    };
+    hideCurrentNote(item?.id);
+
+    currentNote?.folder_id === item?.id && setCurrentNote(null);
   };
 
   useEffect(() => {
     setFolder(item);
   }, [item]);
-
-  useEffect(() => {
-    router.query.folder === item?.name?.toLowerCase()?.split(" ")?.join("_") &&
-      setIsOpen(true);
-  }, []);
 
   return (
     <ListItem>
@@ -110,11 +114,14 @@ const SubFolder: React.FC<AppChildrensType & subFoldersType> = ({
         />
       )}
       <Flex
-        alignItems={"end"}
-        justifyContent={"space-between"}
+        flexDir={{ base: "column", sm: "row" }}
+        alignItems={{ base: "start", sm: "end" }}
+        justifyContent={{ base: "start", sm: "space-between" }}
         w={"100%"}
         onMouseEnter={() => setHoverFolder(true)}
         onMouseLeave={() => setHoverFolder(false)}
+        borderBottom={"1px solid #62677f77"}
+        minH={{ base: "73px", sm: "50px" }}
       >
         <Flex alignItems={"end"} columnGap={"4px"}>
           <Image
@@ -127,17 +134,20 @@ const SubFolder: React.FC<AppChildrensType & subFoldersType> = ({
           <Flex
             as={"form"}
             onSubmit={(e) => editFolderHandler(e, item)}
-            w={"fit-content"}
+            maxW={"140px"}
             border={isEditFolder ? "1px solid #fff" : ""}
             h={"30px"}
             borderRadius={"5px"}
             ps={"8px"}
           >
             <Input
+              maxW={"fit-content"}
               readOnly={!isEditFolder}
-              {...inter_400_14_18}
+              fontSize={"14px"}
+              fontWeight={"400"}
               id={"name"}
               variant={"unstyled"}
+              maxLength={10}
               value={folder?.name || ""}
               onChange={folderChangeHandler}
             />
@@ -158,7 +168,11 @@ const SubFolder: React.FC<AppChildrensType & subFoldersType> = ({
           {notes?.length !== 0 && (
             <Flex flexDir={"column"} ml={"16px"} py={"8px"}>
               {notes?.map((item) => (
-                <FolderNotes key={item.id} item={item} />
+                <FolderNotes
+                  key={item.id}
+                  item={item}
+                  isOpenAddNewNote={isOpenAddNewNote}
+                />
               ))}
             </Flex>
           )}

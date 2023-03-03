@@ -5,7 +5,6 @@ import AddFolderIconWhite from "assets/image/add-folder-white.png";
 import SubFolder from "./sub_folder";
 import AddRootFolder from "./add_root_folder";
 import { useActions } from "hooks/useActions";
-import { inter_400_12_16 } from "../../../styles/fontStyles";
 
 const Span = chakra("span", {});
 
@@ -15,12 +14,17 @@ const FoldersList = () => {
   const isShowAddRootFolder = getIsAddRootFolder();
   const folders = getFolders();
 
-  const childrenFolder = (id: number | string) => {
+  const showRootFolderHandler = () => {
+    setIsShowAddRootFolder(true);
+    setHoverAddBtn(false);
+  };
+
+  const childrenFolder = (id: number) => {
     let childItems = folders?.filter((item) => item.parent_id === id);
     childItems?.sort((a, b) => (a.id > b.id ? 1 : -1));
 
     return childItems?.map((item) => (
-      <SubFolder key={item.id} item={item}>
+      <SubFolder key={item.id} item={item} childrenFolder={childrenFolder}>
         <UnorderedList listStyleType={"none"} ml={"12px"}>
           {childrenFolder(item.id)}
         </UnorderedList>
@@ -39,8 +43,15 @@ const FoldersList = () => {
 
   return (
     <>
-      <Flex mb={"64px"}>{folders?.length > 0 && directories}</Flex>
-      <Flex flexDir={"column"}>
+      <Flex
+        w={"100%"}
+        mb={"36px"}
+        overflowY={"auto"}
+        maxH={"calc(100vh - 141px - 64px - 140px)"}
+      >
+        {folders?.length > 0 && directories}
+      </Flex>
+      <Flex flexDir={"column"} w={"100%"}>
         {isShowAddRootFolder && <AddRootFolder />}
         {!isShowAddRootFolder && (
           <Flex alignItems={"end"} columnGap={"6px"}>
@@ -51,10 +62,10 @@ const FoldersList = () => {
               w={"54px"}
               alt={"Add folder icon"}
               cursor={"pointer"}
-              onClick={() => setIsShowAddRootFolder(true)}
+              onClick={showRootFolderHandler}
             />
             {hoverAddBtn && (
-              <Text {...inter_400_12_16} mb={"6px"}>
+              <Text fontSize={"12px"} fontWeight={"400"} mb={"6px"}>
                 <Span color={"#FFBE55"}>*</Span>Add folder to root
               </Text>
             )}

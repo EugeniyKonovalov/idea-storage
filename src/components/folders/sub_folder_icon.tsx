@@ -5,6 +5,7 @@ import EditFolderIcon from "assets/image/edit.png";
 import DeleteFolderIcon from "assets/image/delete.png";
 import { Flex, Image } from "@chakra-ui/react";
 import { subFoldersIconType } from "types/folders_types";
+import { useActions } from "hooks/useActions";
 
 const SubFolderIcon: React.FC<subFoldersIconType> = ({
   item,
@@ -13,8 +14,15 @@ const SubFolderIcon: React.FC<subFoldersIconType> = ({
   deleteFolderHandler,
   isEditFolderNameHandler,
 }) => {
+  const { isNoteForm } = useActions();
+
+  const openAddNewNoteFormHandler = () => {
+    isOpenAddNewNote();
+    isNoteForm(true);
+  };
+
   return (
-    <Flex alignItems={"center"} columnGap={"8px"}>
+    <Flex alignItems={"center"} columnGap={"8px"} alignSelf={{ base: "end" }}>
       <Image
         src={AddFolderIcon.src}
         w={"24px"}
@@ -29,7 +37,7 @@ const SubFolderIcon: React.FC<subFoldersIconType> = ({
         alt={"document icon"}
         cursor={"pointer"}
         title={"Add document"}
-        onClick={isOpenAddNewNote}
+        onClick={openAddNewNoteFormHandler}
       />
       <Image
         src={EditFolderIcon.src}

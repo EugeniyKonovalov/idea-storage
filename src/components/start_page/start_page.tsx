@@ -1,6 +1,6 @@
-import { chakra, Flex, Grid, Text } from "@chakra-ui/react";
+import { Flex, Grid, Text } from "@chakra-ui/react";
 import React from "react";
-import { inter_400_18_25 } from "../../../styles/fontStyles";
+
 import AddRootFolder from "components/folders/add_root_folder";
 
 const StartPage: React.FC = () => {
@@ -12,7 +12,7 @@ const StartPage: React.FC = () => {
         rowGap={"24px"}
         w={"100%"}
       >
-        <Text {...inter_400_18_25} px={"24px"}>
+        <Text fontSize={"18px"} fontWeight={"400"} px={"24px"}>
           Create your first folder to get started
         </Text>
         <AddRootFolder />

@@ -16,6 +16,6 @@
     "incremental": true,
     "baseUrl": "src"
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "styles/theme.ts", "firebase.config.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "styles/theme.ts", "firebase.config.js", "styles/fontStyles.js"],
   "exclude": ["node_modules"]
 }
