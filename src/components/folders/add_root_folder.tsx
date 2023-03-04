@@ -91,7 +91,7 @@ const AddRootFolder = () => {
         isExistName={isExist}
         enteredName={folder?.name}
         isTouched={folderInputIsTouched}
-        topPosition={"46px"}
+        topPosition={"40px"}
         starTopPosition={"60px"}
         leftPosition={"0"}
       />
