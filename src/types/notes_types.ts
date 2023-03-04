@@ -14,3 +14,9 @@ export interface notesType {
   all_notes: noteType[];
   show_note_in_mobile: boolean;
 }
+
+export interface folderNotesIconsType {
+  item: noteType;
+  openEditNoteHandler: (event: React.MouseEvent, item: noteType) => void;
+  deleteNoteHandler: (event: React.MouseEvent, item: noteType) => void;
+}

@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import { Flex, Image, Text } from "@chakra-ui/react";
+import { Flex, Image, Text, useMediaQuery } from "@chakra-ui/react";
 import DocumentIcon from "assets/image/document-file.png";
-import EditFolderIcon from "assets/image/edit.png";
-import DeleteFolderIcon from "assets/image/delete.png";
 import { noteType } from "types/notes_types";
 import { useActions } from "hooks/useActions";
 import { useDeleteNoteMutation } from "store/api_queries/api_idea_storage";
 import { getCurrentNote } from "store/notes/notes.selectors";
+import FolderNotesIcon from "./folder_notes_icon";
 
 const FolderNotes: React.FC<{
   item: noteType;
   isOpenAddNewNote: () => void;
 }> = ({ item, isOpenAddNewNote }) => {
+  const [isTablet] = useMediaQuery("(max-width: 991px)");
   const {
     setCurrentNote,
     isEditNote,
@@ -29,7 +29,8 @@ const FolderNotes: React.FC<{
     setIsShowMobileNote(true);
   };
 
-  const openEditNoteHandler = (note: noteType) => {
+  const openEditNoteHandler = (event: React.MouseEvent, note: noteType) => {
+    event?.stopPropagation();
     isEditNote(true);
     isNoteForm(true);
     isOpenAddNewNote();
@@ -66,25 +67,19 @@ const FolderNotes: React.FC<{
           {item?.title}
         </Text>
       </Flex>
-      {hoverNote && (
-        <Flex alignItems={"center"} columnGap={"8px"}>
-          <Image
-            src={EditFolderIcon.src}
-            w={"18px"}
-            alt={"folder icon"}
-            cursor={"pointer"}
-            title={"Edit title"}
-            onClick={() => openEditNoteHandler(item)}
-          />
-          <Image
-            src={DeleteFolderIcon.src}
-            w={"18px"}
-            alt={"folder icon"}
-            cursor={"pointer"}
-            title={"Remove note"}
-            onClick={(event) => deleteNoteHandler(event, item)}
-          />
-        </Flex>
+      {!isTablet && hoverNote && (
+        <FolderNotesIcon
+          item={item}
+          openEditNoteHandler={openEditNoteHandler}
+          deleteNoteHandler={deleteNoteHandler}
+        />
+      )}
+      {isTablet && (
+        <FolderNotesIcon
+          item={item}
+          openEditNoteHandler={openEditNoteHandler}
+          deleteNoteHandler={deleteNoteHandler}
+        />
       )}
     </Flex>
   );
