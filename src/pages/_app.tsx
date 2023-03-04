@@ -9,12 +9,16 @@ import store, { persistor } from "store";
 import { PersistGate } from "redux-persist/integration/react";
 import ProivateRoute from "providers/private_route";
 import ErrorProvider from "providers/error_provider";
+import Head from "next/head";
 
 export const inter: NextFont = Inter({ subsets: ["latin"] });
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
+      <Head>
+        <title>Idea Store</title>
+      </Head>
       <main className={inter.className}>
         <ChakraProvider theme={theme}>
           <Provider store={store}>
