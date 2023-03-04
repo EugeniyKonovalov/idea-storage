@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from "react";
 
-const useInput = (validate?: any) => {
+const useInput = () => {
   const [dataForm, setDataFofm] = useState<string | null | any>(null);
   const [isTouched, setIsTouched] = useState<boolean>(false);
 

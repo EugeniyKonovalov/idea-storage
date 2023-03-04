@@ -1,4 +1,4 @@
-import { Flex, Image, Text } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import CustomInput from "components/ui/customInput";
 import CustomModal from "components/ui/customModal";
 import DefaultBtn from "components/ui/defaultBtn";

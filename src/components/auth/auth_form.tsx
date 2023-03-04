@@ -21,7 +21,6 @@ import useAuthInput from "hooks/useAuthInput";
 import AuthValidationText from "components/ui/auth_validation_text";
 
 const AuthForm: React.FC = () => {
-  const [isTablet] = useMediaQuery("(max-width: 768px)");
   const { router } = useAppRouter();
   const { signUp, signIn } = useActions();
   const isSignUp = router.pathname === "/sign_up";

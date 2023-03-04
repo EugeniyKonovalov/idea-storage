@@ -1,5 +1,4 @@
-import { Box, Flex, FormLabel, Grid, Input } from "@chakra-ui/react";
-import { useState } from "react";
+import { Flex, FormLabel, Input } from "@chakra-ui/react";
 import { InputsType } from "types/ui_types";
 import EyeClose from "assets/svg/eye-close.svg";
 import EyeOpen from "assets/svg/eye-open.svg";

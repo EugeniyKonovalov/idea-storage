@@ -10,7 +10,6 @@ import useGetNotes from "hooks/useGetNotes";
 import SubFolderIcon from "./sub_folder_icon";
 import FolderNotes from "../notes/folder_notes";
 import { noteType } from "types/notes_types";
-import useAppRouter from "hooks/useAppRouter";
 import {
   useDeleteFolderMutation,
   useEditFolderMutation,
@@ -25,7 +24,6 @@ const SubFolder: React.FC<AppChildrensType & subFoldersType> = ({
   children,
   childrenFolder,
 }) => {
-  const { router } = useAppRouter();
   const { setCurrentNote } = useActions();
   const {
     isOpen: isAddNewFolder,

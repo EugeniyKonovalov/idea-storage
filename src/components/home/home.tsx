@@ -1,6 +1,5 @@
 import { Flex, Grid, Image, Text, useMediaQuery } from "@chakra-ui/react";
 import HomeImg from "assets/image/online-e.png";
-
 import DefaultBtn from "components/ui/defaultBtn";
 import useAppRouter from "hooks/useAppRouter";
 
@@ -48,8 +47,6 @@ const Home = () => {
           title="Get Start"
           customStyles={{
             w: "40%",
-            // bg: { base: "#FFBE55", sm: "#89B0AE" },
-            // color: { base: "#505568", sm: "#ced4da" },
             alignSelf: { base: "end", sm: "start" },
           }}
           onClick={getStartHandle}

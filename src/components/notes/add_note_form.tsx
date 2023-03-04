@@ -13,7 +13,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import {
   useAddNoteMutation,
   useEditNoteMutation,
-  useGetAllNotesQuery,
 } from "store/api_queries/api_idea_storage";
 import { getIsExistName } from "store/folder/folder.selectors";
 import {
@@ -36,7 +35,6 @@ const AddNoteForm: React.FC<ModalType & addModalType> = ({
   const { isEditNote, isExistName, setEditNote, setCurrentNote, isNoteForm } =
     useActions();
   const [user] = useAuthState(auth);
-  const { data } = useGetAllNotesQuery(user && user?.uid);
   const [addNote] = useAddNoteMutation();
   const [editNote] = useEditNoteMutation();
   const isExist = getIsExistName();
@@ -52,7 +50,6 @@ const AddNoteForm: React.FC<ModalType & addModalType> = ({
     changeHandler: noteChangeHandler,
     blurHandler: noteBlurHandler,
     isTouched: noteIsTouched,
-    leaveFocusHandler: noteLeaveFocusHandler,
   } = useInput();
 
   const noteId = useGenerateId(notes);

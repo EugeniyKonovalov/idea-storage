@@ -1,5 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User } from "firebase/auth";
+import { createSlice } from "@reduxjs/toolkit";
 import { authType } from "types/auth_types";
 import authExtraActions from "./auth.actions";
 

@@ -22,7 +22,6 @@ const CustomTextarea: React.FC<InputsType> = ({
           autoComplete="off"
           variant={"unstyled"}
           rows={14}
-          // resize={"none"}
           _placeholder={{ color: "#ece9e955" }}
           _focus={{ boxShadow: "none" }}
           {...customStyles}

@@ -1,7 +1,5 @@
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
-import axios from "axios";
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -13,7 +11,6 @@ import {
 } from "firebase/firestore";
 import { loadingErrors } from "store/errors/errors.actions";
 import { notesAction } from "store/notes/notes.slice";
-import { folderType } from "types/folders_types";
 import { noteType } from "types/notes_types";
 import { db } from "../../../firebase.config";
 

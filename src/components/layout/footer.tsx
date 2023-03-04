@@ -1,4 +1,4 @@
-import { Flex, Grid, Text } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();

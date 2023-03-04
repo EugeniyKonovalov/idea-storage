@@ -1,7 +1,6 @@
 import { Flex, Image } from "@chakra-ui/react";
 import DefaultBtn from "components/ui/defaultBtn";
 import React, { useEffect } from "react";
-
 import CustomInput from "components/ui/customInput";
 import { useActions } from "hooks/useActions";
 import useInput from "hooks/useInput";
@@ -21,7 +20,6 @@ const AddRootFolder = () => {
   const isExist = getIsExistName();
   const newFolderId = useGenerateId(folders);
   const hasFolder = folders?.length > 1;
-  const isEmpty = (value: string) => value !== "";
 
   const {
     data: folder,
@@ -30,7 +28,7 @@ const AddRootFolder = () => {
     blurHandler: folderBlurHandler,
     isTouched: folderInputIsTouched,
     leaveFocusHandler: folderLeaveFocusHandler,
-  } = useInput(isEmpty);
+  } = useInput();
 
   const addNewFolderHandler = (event: React.FormEvent) => {
     event.preventDefault();
