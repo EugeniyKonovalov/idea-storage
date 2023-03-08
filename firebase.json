@@ -6,11 +6,15 @@
       "**/.*",
       "**/node_modules/**"
     ],
+    "cleanUrls": true,
     "rewrites": [
       {
         "source": "**",
-        "destination": "/index.html"
+        "dynamicLinks": true
       }
     ]
+  },
+  "functions": {
+    "source": "functions"
   }
 }
